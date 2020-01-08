@@ -15,7 +15,9 @@ void shutdown(void);
 
 void delay(int ms);
 
-void point(int x, int y, uint32_t pixel);
+uint32_t get(int x, int y);
+
+void put(int x, int y, uint32_t pixel);
 
 void line(int x0, int y0, int x1, int y1, uint32_t pixel);
 

@@ -6,8 +6,6 @@
 #include <math.h>
 #include <time.h>
 
-// const int xres = 160;
-// const int yres = 120;
 
 const int xres = 20;
 const int yres = 20;
@@ -75,7 +73,13 @@ void delay(int ms)
     SDL_Delay(ms);
 }
 
-void point(int x, int y, uint32_t pixel)
+uint32_t get(int x, int y)
+{
+    return pixels[x + y * xres];
+}
+
+
+void put(int x, int y, uint32_t pixel)
 {
     pixels[x + y * xres] = pixel;
 }
@@ -84,7 +88,7 @@ void square(int x, int y, int w, int h, uint32_t pixel)
 {
     for(int _x = x; _x < x+w; _x++)
     for(int _y = y; _y < y+h; _y++)
-        point(_x, _y, pixel);
+        put(_x, _y, pixel);
 }
 
 void line(int x0, int y0, int x1, int y1, uint32_t pixel)
@@ -94,7 +98,7 @@ void line(int x0, int y0, int x1, int y1, uint32_t pixel)
     int err = dx + dy, e2; /* error value e_xy */
     for (;;)
     {
-        point(x0, y0, pixel);
+        put(x0, y0, pixel);
         if(x0 == x1 && y0 == y1)
             break;
         e2 = 2 * err;
@@ -118,10 +122,10 @@ void circle(int x0, int y0, int radius, uint32_t pixel)
     int ddF_y = -2 * radius;
     int x = 0;
     int y = radius;
-    point(x0, y0 + radius, pixel);
-    point(x0, y0 - radius, pixel);
-    point(x0 + radius, y0, pixel);
-    point(x0 - radius, y0, pixel);
+    put(x0, y0 + radius, pixel);
+    put(x0, y0 - radius, pixel);
+    put(x0 + radius, y0, pixel);
+    put(x0 - radius, y0, pixel);
     while (x < y)
     {
         if(f >= 0)
@@ -133,14 +137,14 @@ void circle(int x0, int y0, int radius, uint32_t pixel)
         x++;
         ddF_x += 2;
         f += ddF_x;
-        point(x0 + x, y0 + y, pixel);
-        point(x0 - x, y0 + y, pixel);
-        point(x0 + x, y0 - y, pixel);
-        point(x0 - x, y0 - y, pixel);
-        point(x0 + y, y0 + x, pixel);
-        point(x0 - y, y0 + x, pixel);
-        point(x0 + y, y0 - x, pixel);
-        point(x0 - y, y0 - x, pixel);
+        put(x0 + x, y0 + y, pixel);
+        put(x0 - x, y0 + y, pixel);
+        put(x0 + x, y0 - y, pixel);
+        put(x0 - x, y0 - y, pixel);
+        put(x0 + y, y0 + x, pixel);
+        put(x0 - y, y0 + x, pixel);
+        put(x0 + y, y0 - x, pixel);
+        put(x0 - y, y0 - x, pixel);
     }
 }
 
@@ -148,7 +152,7 @@ void clear(void)
 {
     for(int x = 0; x < xres; x++)
     for(int y = 0; y < yres; y++)
-        point(x, y, 0xFF000000);
+        put(x, y, 0x0);
 }
 
 bool end(void)
