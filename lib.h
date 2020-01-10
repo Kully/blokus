@@ -27,4 +27,22 @@ void square(int x, int y, int w, int h, uint32_t pixel);
 
 void clear(void);
 
+int UP_KEY(void);
+
+int DOWN_KEY(void);
+
+int LEFT_KEY(void);
+
+int RIGHT_KEY(void);
+
+int Z_KEY(void);
+
+int X_KEY(void);
+
+int C_KEY(void);
+
+int P_KEY(void);
+
+int SPACE_KEY(void);
+
 bool end(void);

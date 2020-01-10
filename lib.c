@@ -73,11 +73,110 @@ void delay(int ms)
     SDL_Delay(ms);
 }
 
+int UP_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_UP])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int DOWN_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_DOWN])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int LEFT_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_LEFT])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int RIGHT_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_RIGHT])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int Z_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_Z])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int X_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_X])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int C_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_C])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int P_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_P])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int SPACE_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_SPACE])
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
 uint32_t get(int x, int y)
 {
     return pixels[x + y * xres];
 }
-
 
 void put(int x, int y, uint32_t pixel)
 {
