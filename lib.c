@@ -161,6 +161,17 @@ int P_KEY(void)
     return 0;
 }
 
+int R_KEY(void)
+{
+    SDL_PumpEvents();
+    const uint8_t* key = SDL_GetKeyboardState(NULL);
+    if(key[SDL_SCANCODE_R])
+    {
+        return 1;
+    }
+    return 0;
+}
+
 int SPACE_KEY(void)
 {
     SDL_PumpEvents();

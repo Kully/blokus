@@ -486,12 +486,25 @@ int main(void)
     int height, width, max_rot, dummy;
     int active_x = 0;
     int active_y = 0;
-    int rot = 0;  // init rotation
+    int rot = 0;       // init rotation
     int piece_idx = 0;
 
     
     int c_idx = 0;
     int colors[4] = {blue(), yellow(), red(), green()};
+
+    // pointers to pieces
+    int Player_1234_Pieces_Left[4][21] = {
+        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
+        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
+        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
+        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
+    };
+
+    int size_P1Pieces = 21;
+    int size_P2Pieces = 21;
+    int size_P3Pieces = 21;
+    int size_P4Pieces = 21;
 
     max_rot = pieceStats[piece_idx][0];
     height = pieceStats[piece_idx][1];
@@ -590,10 +603,14 @@ int main(void)
         if(active_x + width > 20) active_x -= 1;
         if(active_x < 0) active_x += 1;
 
+        if(active_y + height > 20) active_y -= 1;
+        if(active_y < 0) active_y += 1;
+
         // place piece
         if(SPACE_KEY())
         {
-            if(piece_can_be_placed(active_x, active_y, colors[c_idx], pieceLookup[piece_idx][rot]))
+            if(piece_can_be_placed(active_x, active_y, colors[c_idx],
+                                   pieceLookup[piece_idx][rot]))
             {
                 place_piece_to_CurrentBoard(
                     active_x,
@@ -601,11 +618,24 @@ int main(void)
                     colors[c_idx],
                     pieceLookup[piece_idx][rot]
                 );
+
+                // advance color
+                c_idx += 1;
+                if(c_idx >= 4) c_idx = 0;
+
+                // remove_int_from_array()
+                piece_idx = 0;
+
+                // reset variables
+                max_rot = pieceStats[piece_idx][0];
+                height = pieceStats[piece_idx][1];
+                width = pieceStats[piece_idx][2];
+
             }
         }
 
         // reset board
-        if(P_KEY())
+        if(R_KEY())
         {
             for(int i=0; i<20; i++)
             for(int j=0; j<20; j++)

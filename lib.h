@@ -43,6 +43,8 @@ int C_KEY(void);
 
 int P_KEY(void);
 
+int R_KEY(void);
+
 int SPACE_KEY(void);
 
 bool end(void);
