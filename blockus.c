@@ -444,7 +444,22 @@ int piece_can_be_placed(int x, int y, int color, int array[5][5])
                 return 0;
             }
             // only corners touching of same color
-            // ***
+            if(get(x+c + 1, y+r) == color)
+            {
+            	return 0;
+            }
+            if(get(x+c - 1, y+r) == color)
+            {
+            	return 0;
+            }
+            if(get(x+c, y+r + 1) == color)
+            {
+            	return 0;
+            }
+            if(get(x+c, y+r - 1) == color)
+            {
+            	return 0;
+            }
         }
     return 1;
 }
@@ -473,11 +488,12 @@ int main(void)
     int pieceLookup_len = 21;  // number of pieces
 
     // active piece variables
-    int height, width, max_rot;
+    int height, width, max_rot, dummy;
     int active_x = 0;
     int active_y = 0;
     int rot = 0;  // init rotation
     int piece_idx = 0;
+
     
     int c_idx = 0;
     int colors[4] = {blue(), yellow(), red(), green()};
@@ -537,6 +553,11 @@ int main(void)
             if(Z_KEY_COUNTER == 1){
                 rot += 1;
                 if(rot >= max_rot) rot = 0;
+
+                // swap height and width
+               	dummy = width;
+               	width = height;
+               	height = dummy;
             }
         } else Z_KEY_COUNTER = 0;
 
@@ -568,6 +589,16 @@ int main(void)
                 if(c_idx >= 4) c_idx = 0;
             }
         } else C_KEY_COUNTER = 0;
+
+        // boundaries
+        if(active_x+width > 20)
+        {
+        	active_x -= 1;
+        }
+        if(active_x < 0)
+        {
+        	active_x += 1;
+        }
 
         // place piece
         if(SPACE_KEY())
