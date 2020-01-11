@@ -431,32 +431,27 @@ int piece_can_be_placed(int x, int y, int color, int array[5][5])
 {
     for(int r=0;r<5;r++)
     for(int c=0;c<5;c++)
-        if(array[r][c] == 1)
+        if(array[c][r] == 1)
         {
-            // out of bounds
-            if((x+c)>=20 || (y+r)>=20)
-            {
-                return 0;
-            }
             // piece overlapping
-            if(get(x,y) != 0x0)
+            if(currentBoard[y+c][x+r] != 0)
             {
                 return 0;
             }
             // only corners touching of same color
-            if(get(x+c + 1, y+r) == color)
+            if(currentBoard[y+c + 1][x+r] == color)
             {
             	return 0;
             }
-            if(get(x+c - 1, y+r) == color)
+            if(currentBoard[y+c - 1][x+r] == color)
             {
             	return 0;
             }
-            if(get(x+c, y+r + 1) == color)
+            if(currentBoard[y+c][x+r + 1] == color)
             {
             	return 0;
             }
-            if(get(x+c, y+r - 1) == color)
+            if(currentBoard[y+c][x+r - 1] == color)
             {
             	return 0;
             }
@@ -590,15 +585,10 @@ int main(void)
             }
         } else C_KEY_COUNTER = 0;
 
-        // boundaries
-        if(active_x+width > 20)
-        {
-        	active_x -= 1;
-        }
-        if(active_x < 0)
-        {
-        	active_x += 1;
-        }
+
+        // keep pieces on screen
+        if(active_x + width > 20) active_x -= 1;
+        if(active_x < 0) active_x += 1;
 
         // place piece
         if(SPACE_KEY())
