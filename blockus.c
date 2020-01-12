@@ -4,22 +4,10 @@
 
 
 
-int blue()
-{
-    return 0Xff0000ff;  // PLAYER 1
-}
-int yellow()
-{
-    return 0Xffffff00;  // PLAYER 2
-}
-int red()
-{
-    return 0Xffff0000;  // PLAYER 3
-}
-int green()
-{
-    return 0Xff00ff00;  // PLAYER 4
-}
+int blue()   {return 0xff0000ff;}   // PLAYER 1
+int yellow() {return 0xffffff00;}   // PLAYER 2
+int red()    {return 0xffff0000;}   // PLAYER 3
+int green()  {return 0xff00ff00;}   // PLAYER 4
 
 int pieceLookup[][4][5][5] = {
     // PIECE 1
@@ -469,6 +457,19 @@ void draw_piece(int x, int y, int color, int array[5][5])
         }
 }
 
+void remove_int_from_array(int integer, int array[], int array_size)
+{
+    printf("remove_int_from_array(...)\n");
+
+    for(int idx=0; idx<array_size; idx++)
+    {
+        if(array[idx]==integer)
+        {
+            array[idx] = -1;
+        }
+    }
+}
+
 int main(void)
 {
     // player input
@@ -501,10 +502,10 @@ int main(void)
         {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
     };
 
-    int size_P1Pieces = 21;
-    int size_P2Pieces = 21;
-    int size_P3Pieces = 21;
-    int size_P4Pieces = 21;
+    int P1_size = 21;
+    int P2_size = 21;
+    int P3_size = 21;
+    int P4_size = 21;
 
     max_rot = pieceStats[piece_idx][0];
     height = pieceStats[piece_idx][1];
@@ -623,7 +624,8 @@ int main(void)
                 c_idx += 1;
                 if(c_idx >= 4) c_idx = 0;
 
-                // remove_int_from_array()
+                // printf("\npiece_idx %i\n", piece_idx);
+                // remove_int_from_array(piece_idx, Player_1234_Pieces_Left[0]);
                 piece_idx = 0;
 
                 // reset variables
