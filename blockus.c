@@ -2,7 +2,68 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+typedef struct
+{
+    char* array;
+    int count;
+}
+List;
 
+List __init__()
+{
+    List list;
+    list.count = 21;
+    list.array = malloc(list.count);
+    return list;
+}
+
+void List_Populate(List* self)
+{
+    for(int i = 0; i < self->count; i++)
+        self->array[i] = i;
+}
+
+int List_Contains_Int(List* self, int k)
+{ 
+    for(int i = 0; i < self->count; i++)
+    {
+        if(self->array[i] == k)
+            return 1;
+    }
+    return 0;
+}
+
+void List_Remove_Int(List* self, int k)
+{
+    for(int i = 0; i < self->count; i++)
+    {
+        if(self->array[i] > k)
+        {
+            self->array[i-1] = self->array[i];
+        }
+    }
+
+    // decrement count
+    if(self->count > 0)
+        self->count --;
+
+    // realloc
+    self->array = realloc(self->array, self->count);
+}
+
+void List_Print(List* self)
+{
+    printf("list->array:\n");
+    for(int i = 0; i < self->count; i++)
+        printf("  >> %d\n", self->array[i]);
+    printf("list->count\n  >> %d\n", self->count);
+}
+
+void List_Destroy(List* self)
+{
+    free(self->array);  // same as list.array but use -> for pointer
+    self->array = NULL;
+}
 
 int blue()   {return 0xff0000ff;}   // PLAYER 1
 int yellow() {return 0xffffff00;}   // PLAYER 2
@@ -398,21 +459,17 @@ int currentBoard[20][20] = {0};
 
 void move_currentBoard_to_vram(int array[20][20])
 {
-    for(int i=0;i<20;i++)
-    for(int j=0;j<20;j++)
-        {
-            put(i, j, array[j][i]);
-        }
+    for(int i = 0; i<20; i++)
+    for(int j = 0; j<20; j++)
+        put(i, j, array[j][i]);
 }
 
 void place_piece_to_CurrentBoard(int x, int y, int color, int array[5][5])
 {
-    for(int r=0;r<5;r++)
-    for(int c=0;c<5;c++)
+    for(int r=0; r<5; r++)
+    for(int c=0; c<5; c++)
         if(array[r][c] == 1)
-        {
             currentBoard[y+r][x+c] = color;
-        }
 }
 
 int piece_can_be_placed(int x, int y, int color, int array[5][5])
@@ -423,26 +480,17 @@ int piece_can_be_placed(int x, int y, int color, int array[5][5])
         {
             // piece overlapping
             if(currentBoard[y+c][x+r] != 0)
-            {
                 return 0;
-            }
+            
             // only corners touching of same color
             if(currentBoard[y+c + 1][x+r] == color)
-            {
             	return 0;
-            }
             if(currentBoard[y+c - 1][x+r] == color)
-            {
             	return 0;
-            }
             if(currentBoard[y+c][x+r + 1] == color)
-            {
             	return 0;
-            }
             if(currentBoard[y+c][x+r - 1] == color)
-            {
             	return 0;
-            }
         }
     return 1;
 }
@@ -455,19 +503,6 @@ void draw_piece(int x, int y, int color, int array[5][5])
         {
             put(x+c, y+r, color);
         }
-}
-
-void remove_int_from_array(int integer, int array[], int array_size)
-{
-    printf("remove_int_from_array(...)\n");
-
-    for(int idx=0; idx<array_size; idx++)
-    {
-        if(array[idx]==integer)
-        {
-            array[idx] = -1;
-        }
-    }
 }
 
 int main(void)
@@ -495,17 +530,9 @@ int main(void)
     int colors[4] = {blue(), yellow(), red(), green()};
 
     // pointers to pieces
-    int Player_1234_Pieces_Left[4][21] = {
-        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
-        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
-        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
-        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
-    };
-
-    int P1_size = 21;
-    int P2_size = 21;
-    int P3_size = 21;
-    int P4_size = 21;
+    List P1_List = __init__();
+    List_Populate(&P1_List);
+    List_Remove_Int(&P1_List, 5);
 
     max_rot = pieceStats[piece_idx][0];
     height = pieceStats[piece_idx][1];
@@ -607,7 +634,7 @@ int main(void)
         if(active_y + height > 20) active_y -= 1;
         if(active_y < 0) active_y += 1;
 
-        // place piece
+        // place piece down
         if(SPACE_KEY())
         {
             if(piece_can_be_placed(active_x, active_y, colors[c_idx],
@@ -620,13 +647,11 @@ int main(void)
                     pieceLookup[piece_idx][rot]
                 );
 
-                // advance color
-                c_idx += 1;
-                if(c_idx >= 4) c_idx = 0;
+                // advance color - DISABLED FOR NOW
+                // c_idx += 1;
+                // if(c_idx >= 4) c_idx = 0;
 
-                // printf("\npiece_idx %i\n", piece_idx);
-                // remove_int_from_array(piece_idx, Player_1234_Pieces_Left[0]);
-                piece_idx = 0;
+                // piece_idx = 0;
 
                 // reset variables
                 max_rot = pieceStats[piece_idx][0];

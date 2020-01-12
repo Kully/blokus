@@ -183,7 +183,6 @@ int SPACE_KEY(void)
     return 0;
 }
 
-
 uint32_t get(int x, int y)
 {
     return pixels[x + y * xres];
