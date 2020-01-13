@@ -1,4 +1,4 @@
-#include "lib.h"
+#include "io.h"
 #include "List.h"
 #include "Pieces.h"
 
@@ -14,7 +14,7 @@ void CurrentBoard_To_Vram(int array[20][20])
 {
     for(int i = 0; i<20; i++)
     for(int j = 0; j<20; j++)
-        put(i, j, array[j][i]);
+        io_put(i, j, array[j][i]);
 }
 
 void Write_Piece_To_CurrentBoard(int x, int y, int color, int array[5][5])
@@ -114,7 +114,7 @@ void Draw_Piece(int x, int y, int color, int array[5][5])
     for(int c=0;c<5;c++)
         if(array[r][c] == 1)
         {
-            put(x+c, y+r, color);
+            io_put(x+c, y+r, color);
         }
 }
 
@@ -153,15 +153,15 @@ int main(void)
     height = Piece_Info[arr_list[player].array[piece_idx]][1];
     width = Piece_Info[arr_list[player].array[piece_idx]][2];
 
-    setup();
-    resize(20);
-    while(!end())
+    io_setup();
+    io_resize(20);
+    while(!io_end())
     {
-        lock();
-        clear();
+        io_lock();
+        io_clear();
 
         // move up
-        if(UP_KEY())
+        if(io_up_key())
         {
             UP_KEY_COUNTER += 1;
             if(UP_KEY_COUNTER == 1){
@@ -170,7 +170,7 @@ int main(void)
         } else UP_KEY_COUNTER = 0;
 
         // move down
-        if(DOWN_KEY())
+        if(io_down_key())
         {            
             DOWN_KEY_COUNTER += 1;
             if(DOWN_KEY_COUNTER == 1){
@@ -179,7 +179,7 @@ int main(void)
         } else DOWN_KEY_COUNTER = 0;
 
         // move down
-        if(LEFT_KEY())
+        if(io_left_key())
         {
             LEFT_KEY_COUNTER += 1;
             if(LEFT_KEY_COUNTER == 1){
@@ -188,7 +188,7 @@ int main(void)
         } else LEFT_KEY_COUNTER = 0;
 
         // move right
-        if(RIGHT_KEY())
+        if(io_right_key())
         {
             RIGHT_KEY_COUNTER += 1;
             if(RIGHT_KEY_COUNTER == 1){
@@ -198,7 +198,7 @@ int main(void)
 
 
         // rotate piece
-        if(C_KEY())
+        if(io_c_key())
         {
             C_KEY_COUNTER += 1;
             if(C_KEY_COUNTER == 1){
@@ -213,7 +213,7 @@ int main(void)
         } else C_KEY_COUNTER = 0;
 
         // last piece (backwards)
-        if(Z_KEY())
+        if(io_z_key())
         {
             Z_KEY_COUNTER += 1;
             if(Z_KEY_COUNTER == 1)
@@ -231,7 +231,7 @@ int main(void)
         } else Z_KEY_COUNTER = 0;
 
         // next piece (forwards)
-        if(X_KEY())
+        if(io_x_key())
         {
             X_KEY_COUNTER += 1;
             if(X_KEY_COUNTER == 1)
@@ -256,7 +256,7 @@ int main(void)
         if(active_y < 0) active_y += 1;
 
         // place piece down
-        if(SPACE_KEY())
+        if(io_space_key())
         {
             SPACE_KEY_COUNTER += 1;
             if(SPACE_KEY_COUNTER == 1){
@@ -293,7 +293,7 @@ int main(void)
         } else SPACE_KEY_COUNTER = 0;
 
         // RESET GAME
-        if(R_KEY())
+        if(io_r_key())
         {
             // clear the board
             for(int i=0; i<20; i++)
@@ -314,8 +314,8 @@ int main(void)
             Pieces[arr_list[player].array[piece_idx]][rot]
         );
 
-        unlock();
-        delay(15);
+        io_unlock();
+        io_delay(15);
     }
-    shutdown();
+    io_shutdown();
 }
