@@ -1,84 +1,11 @@
 #include "lib.h"
+#include "List.h"
+
 #include "stdio.h"
 #include "stdlib.h"
 
 // global constants
 #define DEBUG 1
-
-int blue()   {return 0xff0000ff;}   // PLAYER 1
-int yellow() {return 0xffffff00;}   // PLAYER 2
-int red()    {return 0xffff0000;}   // PLAYER 3
-int green()  {return 0xff00ff00;}   // PLAYER 4
-
-struct List
-{
-    int color;
-    char* array;
-    int count;
-};
-
-struct List __init__()
-{
-    struct List list;
-    list.color = 0xff0000ff;
-    list.count = 21;
-    list.array = malloc(list.count);
-    return list;
-}
-
-void List_Populate(struct List* self)
-{
-    for(int i = 0; i < self->count; i++)
-        self->array[i] = i;
-}
-
-int List_Contains_Int(struct List* self, int k)
-{ 
-    for(int i = 0; i < self->count; i++)
-    {
-        if(self->array[i] == k)
-            return 1;
-    }
-    return 0;
-}
-
-void List_Remove_Int(struct List* self, int k)
-{
-    for(int i = 0; i < self->count; i++)
-    {
-        if(self->array[i] > k)
-        {
-            self->array[i-1] = self->array[i];
-        }
-    }
-
-    // decrement count
-    if(self->count > 0)
-        self->count --;
-
-    // realloc
-    self->array = realloc(self->array, self->count);
-}
-
-void List_Print_Array(struct List* self)
-{
-    printf("list->array:\n");
-    for(int i = 0; i < self->count; i++)
-        printf("  >> %d\n", self->array[i]);
-}
-
-void List_Print_Count(struct List* self)
-{
-    printf("  >>%d pieces left\n", self->count);
-}
-
-void List_Destroy(struct List* self)
-{
-    free(self->array);  // same as list.array but use -> for pointer
-    self->array = NULL;
-}
-
-struct List arr_list[4];  // holds structs for Players 1,2,3,4
 
 int Pieces[][4][5][5] = {
     // PIECE 1
@@ -545,22 +472,22 @@ void Init_Players(struct List arr_list[4])
 {
     // PLAYER 1
     arr_list[0] =  __init__();
-    arr_list[0].color = blue();
+    arr_list[0].color = 0xff0000ff;  // blue
     List_Populate(&arr_list[0]);
 
     // PLAYER 2
     arr_list[1] =  __init__();
-    arr_list[1].color = yellow();
+    arr_list[1].color = 0xffffff00;  // yellow
     List_Populate(&arr_list[1]);
 
     // PLAYER 3
     arr_list[2] =  __init__();
-    arr_list[2].color = red();
+    arr_list[2].color = 0xffff0000;  // red
     List_Populate(&arr_list[2]);
 
     // PLAYER 4
     arr_list[3] =  __init__();
-    arr_list[3].color = green();
+    arr_list[3].color = 0xff00ff00;  // green
     List_Populate(&arr_list[3]);
 }
 

@@ -1,4 +1,3 @@
-#include "board.h"
 #include "lib.h"
 
 #include <stdio.h>
