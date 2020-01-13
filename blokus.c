@@ -7,36 +7,31 @@ int yellow() {return 0xffffff00;}   // PLAYER 2
 int red()    {return 0xffff0000;}   // PLAYER 3
 int green()  {return 0xff00ff00;}   // PLAYER 4
 
-typedef struct
+struct List
 {
-    int id;
     int color;
     char* array;
     int count;
-}
-List;
+};
 
-typedef struct
-{}
-arr_list[4];
-
-List __init__()
+struct List __init__()
 {
-    List list;
-    list.id = 0;
+    struct List list;
     list.color = 0xff0000ff;
     list.count = 21;
     list.array = malloc(list.count);
     return list;
 }
 
-void List_Populate(List* self)
+struct List arr_list[4];  // holds all players
+
+void List_Populate(struct List* self)
 {
     for(int i = 0; i < self->count; i++)
         self->array[i] = i;
 }
 
-int List_Contains_Int(List* self, int k)
+int List_Contains_Int(struct List* self, int k)
 { 
     for(int i = 0; i < self->count; i++)
     {
@@ -46,7 +41,7 @@ int List_Contains_Int(List* self, int k)
     return 0;
 }
 
-void List_Remove_Int(List* self, int k)
+void List_Remove_Int(struct List* self, int k)
 {
     for(int i = 0; i < self->count; i++)
     {
@@ -64,19 +59,19 @@ void List_Remove_Int(List* self, int k)
     self->array = realloc(self->array, self->count);
 }
 
-void List_Print_Array(List* self)
+void List_Print_Array(struct List* self)
 {
     printf("list->array:\n");
     for(int i = 0; i < self->count; i++)
         printf("  >> %d\n", self->array[i]);
 }
 
-void List_Print_Count(List* self)
+void List_Print_Count(struct List* self)
 {
-    printf("list->count\n  >> %d\n", self->count);
+    printf("  list->count: %d\n", self->count);
 }
 
-void List_Destroy(List* self)
+void List_Destroy(struct List* self)
 {
     free(self->array);  // same as list.array but use -> for pointer
     self->array = NULL;
@@ -493,8 +488,8 @@ int piece_can_be_placed(int x, int y, int color, int array[5][5])
             // piece overlapping
             if(currentBoard[y+c][x+r] != 0)
                 return 0;
-            
-            // only corners touching of same color
+
+            // not touching edges
             if(currentBoard[y+c + 1][x+r] == color)
             	return 0;
             if(currentBoard[y+c - 1][x+r] == color)
@@ -503,6 +498,12 @@ int piece_can_be_placed(int x, int y, int color, int array[5][5])
             	return 0;
             if(currentBoard[y+c][x+r - 1] == color)
             	return 0;
+
+            // at least one corner touching
+            if((currentBoard[y+c + 1][x+r + 1] == color) || (currentBoard[y+c - 1][x+r + 1] == color) || (currentBoard[y+c + 1][x+r - 1] == color) || (currentBoard[y+c - 1][x+r - 1] == color))
+            {
+                return 1;
+            }
         }
     return 1;
 }
@@ -527,6 +528,7 @@ int main(void)
     int Z_KEY_COUNTER = 0;
     int X_KEY_COUNTER = 0;
     int C_KEY_COUNTER = 0;
+    int SPACE_KEY_COUNTER = 0;
 
     int pieceLookup_len = 21;  // number of pieces
 
@@ -536,28 +538,36 @@ int main(void)
     int active_y = 0;
     int rot = 0;       // init rotation
     int piece_idx = 0;
-
-    int c_idx = 0;
-    int colors[4] = {blue(), yellow(), red(), green()};
+    int player = 0;
 
     // init players pieces
-    List P1_List = __init__();
+    struct List P1_List = __init__();
     List_Populate(&P1_List);
 
-    List P2_List = __init__();
-    List_Populate(&P2_List);
+    // PLAYER 1
+    arr_list[0] =  __init__();
+    arr_list[0].color = blue();
+    List_Populate(&arr_list[0]);
 
-    List P3_List = __init__();
-    List_Populate(&P3_List);
+    // PLAYER 2
+    arr_list[1] =  __init__();
+    arr_list[1].color = yellow();
+    List_Populate(&arr_list[1]);
 
-    List P4_List = __init__();
-    List_Populate(&P4_List);
+    // PLAYER 3
+    arr_list[2] =  __init__();
+    arr_list[2].color = red();
+    List_Populate(&arr_list[2]);
 
-    // arr_list[0]
+    // PLAYER 4
+    arr_list[3] =  __init__();
+    arr_list[3].color = green();
+    List_Populate(&arr_list[3]);
 
-    max_rot = pieceStats[piece_idx][0];
-    height = pieceStats[piece_idx][1];
-    width = pieceStats[piece_idx][2];
+    // pick first piece
+    max_rot = pieceStats[arr_list[0].array[piece_idx]][0];
+    height = pieceStats[arr_list[0].array[piece_idx]][1];
+    width = pieceStats[arr_list[0].array[piece_idx]][2];
 
     setup();
     resize(20);
@@ -625,16 +635,16 @@ int main(void)
             if(X_KEY_COUNTER == 1){
                 
                 piece_idx += 1;
-                if(piece_idx >= P1_List.count)
+                if(piece_idx >= arr_list[player].count)
                 {
                     piece_idx = 0;
                 }
                 rot = 0;  // init rotation upon swapping piece
 
                 // reset variables
-                max_rot = pieceStats[P1_List.array[piece_idx]][0];
-                height = pieceStats[P1_List.array[piece_idx]][1];
-                width = pieceStats[P1_List.array[piece_idx]][2];
+                max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
+                height = pieceStats[arr_list[player].array[piece_idx]][1];
+                width = pieceStats[arr_list[player].array[piece_idx]][2];
             }
         } else X_KEY_COUNTER = 0;
 
@@ -643,11 +653,10 @@ int main(void)
         {
             C_KEY_COUNTER += 1;
             if(C_KEY_COUNTER == 1){
-                c_idx += 1;
-                if(c_idx >= 4) c_idx = 0;
+                player += 1;
+                if(player >= 4) player = 0;
             }
         } else C_KEY_COUNTER = 0;
-
 
         // keep pieces on screen
         if(active_x + width > 20) active_x -= 1;
@@ -659,31 +668,39 @@ int main(void)
         // place piece down
         if(SPACE_KEY())
         {
-            if(piece_can_be_placed(active_x, active_y, colors[c_idx],
-                                   pieceLookup[P1_List.array[piece_idx]][rot]))
-            {
-                place_piece_to_CurrentBoard(
+            SPACE_KEY_COUNTER += 1;
+            if(SPACE_KEY_COUNTER == 1){
+                if(piece_can_be_placed(
                     active_x,
                     active_y,
-                    colors[c_idx],
-                    pieceLookup[P1_List.array[piece_idx]][rot]
-                );
+                    arr_list[player].color,
+                    pieceLookup[arr_list[player].array[piece_idx]][rot]))
+                {
+                    place_piece_to_CurrentBoard(
+                        active_x,
+                        active_y,
+                        arr_list[player].color,
+                        pieceLookup[arr_list[player].array[piece_idx]][rot]
+                    );
 
-                // advance color
-                c_idx += 1;
-                if(c_idx >= 4) c_idx = 0;
+                    printf("Player %d \n", player+1);
 
-                // remove piece from list
-                List_Remove_Int(&P1_List, P1_List.array[piece_idx]);
-                List_Print_Count(&P1_List);
+                    // advance color
+                    player += 1;
+                    if(player >= 4) player = 0;
 
-                // reset variables
-                max_rot = pieceStats[P1_List.array[piece_idx]][0];
-                height = pieceStats[P1_List.array[piece_idx]][1];
-                width = pieceStats[P1_List.array[piece_idx]][2];
+                    // remove piece from list
+                    List_Remove_Int(&arr_list[player], arr_list[player].array[piece_idx]);
+                    List_Print_Count(&arr_list[player]);
 
+                    // reset variables
+                    max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
+                    height = pieceStats[arr_list[player].array[piece_idx]][1];
+                    width = pieceStats[arr_list[player].array[piece_idx]][2];
+
+                }
             }
-        }
+        } else SPACE_KEY_COUNTER = 0;
 
         // reset board
         if(R_KEY())
@@ -700,8 +717,8 @@ int main(void)
         draw_piece(
             active_x,
             active_y,
-            colors[c_idx],
-            pieceLookup[P1_List.array[piece_idx]][rot]
+            arr_list[player].color,
+            pieceLookup[arr_list[player].array[piece_idx]][rot]
         );
 
         unlock();
