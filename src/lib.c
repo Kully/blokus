@@ -1,3 +1,4 @@
+#include "board.h"
 #include "lib.h"
 
 #include <stdio.h>
@@ -144,17 +145,6 @@ int C_KEY(void)
     SDL_PumpEvents();
     const uint8_t* key = SDL_GetKeyboardState(NULL);
     if(key[SDL_SCANCODE_C])
-    {
-        return 1;
-    }
-    return 0;
-}
-
-int P_KEY(void)
-{
-    SDL_PumpEvents();
-    const uint8_t* key = SDL_GetKeyboardState(NULL);
-    if(key[SDL_SCANCODE_P])
     {
         return 1;
     }

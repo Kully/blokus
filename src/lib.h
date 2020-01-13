@@ -35,16 +35,14 @@ int LEFT_KEY(void);
 
 int RIGHT_KEY(void);
 
+int SPACE_KEY(void);
+
 int Z_KEY(void);
 
 int X_KEY(void);
 
 int C_KEY(void);
 
-int P_KEY(void);
-
 int R_KEY(void);
-
-int SPACE_KEY(void);
 
 bool end(void);
