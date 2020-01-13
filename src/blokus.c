@@ -1,5 +1,6 @@
 #include "lib.h"
 #include "List.h"
+#include "Pieces.h"
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -7,391 +8,8 @@
 // global constants
 #define DEBUG 1
 
-int Pieces[][4][5][5] = {
-    // PIECE 1
-    {
-        {
-            {1}
-        },
-    },
-    // PIECE 2
-    {
-        {
-            {1},
-            {1}
-        },
-        {
-            {1, 1},
-        },
-    },
-    // PIECE 3
-    {
-        {
-            {1},
-            {1},
-            {1}
-        },
-        {
-            {1, 1, 1},
-        },
-    },
-    // PIECE 4
-    {
-        {
-            {1, 0},
-            {1, 1}
-        },
-        {
-            {1, 1},
-            {1, 0}
-        },
-        {
-            {1, 1},
-            {0, 1}
-        },
-        {
-            {0, 1},
-            {1, 1}
-        },
-    },
-    // PIECE 5
-    {
-        {
-            {1},
-            {1},
-            {1},
-            {1},
-        },
-        {
-            {1, 1, 1, 1}
-        }
-    },
-    // PIECE 6
-    {
-        {
-            {0, 1},
-            {0, 1},
-            {1, 1},
-        },
-        {
-            {1, 0, 0},
-            {1, 1, 1},
-        },
-        {
-            {1, 1},
-            {1, 0},
-            {1, 0},
-        },
-        {
-            {1, 1, 1},
-            {0, 0, 1},
-        },
-    },
-    // PIECE 7
-    {
-        {
-            {1, 0},
-            {1, 1},
-            {1, 0},
-        },
-        {
-            {1, 1, 1},
-            {0, 1, 0},
-        },
-        {
-            {0, 1},
-            {1, 1},
-            {0, 1},
-        },
-        {
-            {0, 1, 0},
-            {1, 1, 1},
-        },
-    },
-    // PIECE 8
-    {
-        {
-            {1, 1},
-            {1, 1},
-        },
-    },
-    // PIECE 9
-    {
-        {
-            {1, 1, 0},
-            {0, 1, 1},
-        },
-        {
-            {0, 1},
-            {1, 1},
-            {1, 0}
-        },
-    },
-    // PIECE 10
-    {
-        {
-            {1},
-            {1},
-            {1},
-            {1},
-            {1},
-        },
-        {
-            {1, 1, 1, 1, 1},
-        },
-    },
-    // PIECE 11
-    {
-        {
-            {0, 1},
-            {0, 1},
-            {0, 1},
-            {1, 1},
-        },
-        {
-            {1, 0, 0, 0},
-            {1, 1, 1, 1},
-        },
-        {
-            {1, 1},
-            {1, 0},
-            {1, 0},
-            {1, 0},
-        },
-        {
-            {1, 1, 1, 1},
-            {0, 0, 0, 1},
-        },
-    },
-    // PIECE 12
-    {
-        {
-            {0, 1},
-            {0, 1},
-            {1, 1},
-            {1, 0},
-        },
-        {
-            {1, 1, 0, 0},
-            {0, 1, 1, 1},
-        },
-        {
-            {0, 1},
-            {1, 1},
-            {1, 0},
-            {1, 0},
-        },
-        {
-            {1, 1, 1, 0},
-            {0, 0, 1, 1},
-        },
-    },
-    // PIECE 13
-    {
-        {
-            {0, 1},
-            {1, 1},
-            {1, 1},
-        },
-        {
-            {1, 1, 0},
-            {1, 1, 1},
-        },
-        {
-            {1, 1},
-            {1, 1},
-            {1, 0},
-        },
-        {
-            {1, 1, 1},
-            {0, 1, 1},
-        },
-    },
-    // PIECE 14
-    {
-        {
-            {1, 1},
-            {0, 1},
-            {1, 1},
-        },
-        {
-            {1, 0, 1},
-            {1, 1, 1}
-        },
-        {
-            {1, 1},
-            {1, 0},
-            {1, 1},
-        },
-        {
-            {1, 1, 1},
-            {1, 0, 1}
-        },
-    },
-    // PIECE 15
-    {
-        {
-            {1, 0},
-            {1, 1},
-            {1, 0},
-            {1, 0},
-        },
-        {
-            {1, 1, 1, 1},
-            {0, 0, 1, 0},
-        },
-        {
-            {0, 1},
-            {0, 1},
-            {1, 1},
-            {0, 1},
-        },
-        {
-            {0, 1, 0, 0},
-            {1, 1, 1, 1},
-        },
-    },
-    // PIECE 16
-    {
-        {
-            {0, 1, 0},
-            {0, 1, 0},
-            {1, 1, 1},
-        },
-        {
-            {1, 0, 0},
-            {1, 1, 1},
-            {1, 0, 0},
-        },
-        {
-            {1, 1, 1},
-            {0, 1, 0},
-            {0, 1, 0},
-        },
-        {
-            {0, 0, 1},
-            {1, 1, 1},
-            {0, 0, 1},
-        },
-    },
-    // PIECE 17
-    {
-        {
-            {1, 0, 0},
-            {1, 0, 0},
-            {1, 1, 1},
-        },
-        {
-            {1, 1, 1},
-            {1, 0, 0},
-            {1, 0, 0},
-        },
-        {
-            {1, 1, 1},
-            {0, 0, 1},
-            {0, 0, 1},
-        },
-        {
-            {0, 0, 1},
-            {0, 0, 1},
-            {1, 1, 1},
-        }
-    },
-    // PIECE 18
-    {
-        {
-            {1, 1, 0},
-            {0, 1, 1},
-            {0, 0, 1},
-        },
-        {
-            {0, 0, 1},
-            {0, 1, 1},
-            {1, 1, 0},
-        },
-        {
-            {1, 0, 0},
-            {1, 1, 0},
-            {0, 1, 1},
-        },
-        {
-            {0, 1, 1},
-            {1, 1, 0},
-            {1, 0, 0},
-        },
-    },
-    // PIECE 19
-    {
-        {
-            {1, 0, 0},
-            {1, 1, 1},
-            {0, 0, 1},
-        },
-        {
-            {0, 1, 1},
-            {0, 1, 0},
-            {1, 1, 0},
-        },
-    },
-    // PIECE 20
-    {
-        {
-            {1, 0, 0},
-            {1, 1, 1},
-            {0, 1, 0},
-        },
-        {
-            {0, 1, 1},
-            {1, 1, 0},
-            {0, 1, 0},
-        },
-        {
-            {0, 1, 0},
-            {1, 1, 1},
-            {0, 0, 1},
-        },
-        {
-            {0, 1, 0},
-            {0, 1, 1},
-            {1, 1, 0},
-        },
-    },
-    // PIECE 21
-    {
-        {
-            {0, 1, 0},
-            {1, 1, 1},
-            {0, 1, 0},
-        },
-    }
-};
 
-// holds max_rotations, height, width of pieces
-int pieceStats[21][3] = {
-    {1, 1, 1},  // 1
-    {2, 2, 1},  // 2
-    {2, 3, 1},  // 3
-    {4, 2, 2},  // 4
-    {2, 4, 1},  // 5
-    {4, 3, 2},  // 6
-    {4, 3, 2},  // 7
-    {1, 2, 2},  // 8
-    {2, 2, 3},  // 9
-    {2, 5, 1},  // 10
-    {4, 4, 2},  // 11
-    {4, 4, 2},  // 12
-    {4, 3, 2},  // 13
-    {4, 3, 2},  // 14
-    {4, 4, 2},  // 15
-    {4, 3, 3},  // 16
-    {4, 3, 3},  // 17
-    {4, 3, 3},  // 18
-    {2, 3, 3},  // 19
-    {4, 3, 3},  // 20
-    {1, 3, 3},  // 21
-};
-
-int currentBoard[20][20] = {0};  // holds all the colors
+int currentBoard[20][20] = {0};  // placed pixels in 2d array
 
 void CurrentBoard_To_Vram(int array[20][20])
 {
@@ -503,9 +121,10 @@ void Draw_Piece(int x, int y, int color, int array[5][5])
 
 // void set_rot_width_height_of_piece()
 // {
-//     max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
-//     height = pieceStats[arr_list[player].array[piece_idx]][1];
-//     width = pieceStats[arr_list[player].array[piece_idx]][2];
+//     // reset variables
+//     max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
+//     height = Piece_Info[arr_list[player].array[piece_idx]][1];
+//     width = Piece_Info[arr_list[player].array[piece_idx]][2];
 // }
 
 int main(void)
@@ -531,9 +150,9 @@ int main(void)
     Init_Players(arr_list);
  
     // grab meta data for selected piece
-    max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
-    height = pieceStats[arr_list[player].array[piece_idx]][1];
-    width = pieceStats[arr_list[player].array[piece_idx]][2];
+    max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
+    height = Piece_Info[arr_list[player].array[piece_idx]][1];
+    width = Piece_Info[arr_list[player].array[piece_idx]][2];
 
     setup();
     resize(20);
@@ -606,9 +225,9 @@ int main(void)
                 rot = 0;  // init rotation upon swapping piece
 
                 // reset variables
-                max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
-                height = pieceStats[arr_list[player].array[piece_idx]][1];
-                width = pieceStats[arr_list[player].array[piece_idx]][2];
+                max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
+                height = Piece_Info[arr_list[player].array[piece_idx]][1];
+                width = Piece_Info[arr_list[player].array[piece_idx]][2];
             }
         } else Z_KEY_COUNTER = 0;
 
@@ -624,9 +243,9 @@ int main(void)
                 rot = 0;  // init rotation upon swapping piece
 
                 // reset variables
-                max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
-                height = pieceStats[arr_list[player].array[piece_idx]][1];
-                width = pieceStats[arr_list[player].array[piece_idx]][2];
+                max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
+                height = Piece_Info[arr_list[player].array[piece_idx]][1];
+                width = Piece_Info[arr_list[player].array[piece_idx]][2];
             }
         } else X_KEY_COUNTER = 0;
 
@@ -666,10 +285,9 @@ int main(void)
                     if(player >= 4) player = 0;
 
                     // reset variables
-                    // TODO - DRY
-                    max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
-                    height = pieceStats[arr_list[player].array[piece_idx]][1];
-                    width = pieceStats[arr_list[player].array[piece_idx]][2];
+                    max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
+                    height = Piece_Info[arr_list[player].array[piece_idx]][1];
+                    width = Piece_Info[arr_list[player].array[piece_idx]][2];
 
                 }
             }

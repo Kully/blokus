@@ -21,8 +21,6 @@ struct List __init__()
 
 struct List arr_list[4];  // holds structs for Players 1,2,3,4
 
-
-
 void List_Populate(struct List* self)
 {
     for(int i = 0; i < self->count; i++)
