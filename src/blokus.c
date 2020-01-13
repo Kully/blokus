@@ -5,7 +5,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-// global constants
 #define DEBUG 1
 
 
