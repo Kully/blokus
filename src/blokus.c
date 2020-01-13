@@ -71,7 +71,7 @@ void List_Print_Array(struct List* self)
 
 void List_Print_Count(struct List* self)
 {
-    printf("  list->count: %d\n", self->count);
+    printf("  >>%d pieces left\n", self->count);
 }
 
 void List_Destroy(struct List* self)
@@ -683,9 +683,6 @@ int main(void)
 
         // swap piece (backwards)
         // if(C_KEY())
-        // {
-
-        // }
 
         // keep pieces on screen
         if(active_x + width > 20) active_x -= 1;
@@ -711,7 +708,11 @@ int main(void)
                         pieceLookup[arr_list[player].array[piece_idx]][rot]
                     );
 
-                    // remove piece from list
+                    #if DEBUG == 1
+                        printf("Player %d Played\n", player+1);
+                        List_Print_Count(&arr_list[player]);
+                    #endif
+
                     List_Remove_Int(&arr_list[player], arr_list[player].array[piece_idx]);
                     
                     // advance color
@@ -722,11 +723,6 @@ int main(void)
                     max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
                     height = pieceStats[arr_list[player].array[piece_idx]][1];
                     width = pieceStats[arr_list[player].array[piece_idx]][2];
-
-                    #if DEBUG == 1
-                        printf("Player %d \n", player+1);
-                        List_Print_Count(&arr_list[player]);
-                    #endif
 
                 }
             }
