@@ -2,6 +2,9 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+// global constants
+#define DEBUG 1
+
 int blue()   {return 0xff0000ff;}   // PLAYER 1
 int yellow() {return 0xffffff00;}   // PLAYER 2
 int red()    {return 0xffff0000;}   // PLAYER 3
@@ -23,7 +26,7 @@ struct List __init__()
     return list;
 }
 
-struct List arr_list[4];  // holds all players
+struct List arr_list[4];  // holds all player info
 
 void List_Populate(struct List* self)
 {
@@ -471,7 +474,7 @@ void move_currentBoard_to_vram(int array[20][20])
         put(i, j, array[j][i]);
 }
 
-void place_piece_to_CurrentBoard(int x, int y, int color, int array[5][5])
+void write_piece_to_CurrentBoard(int x, int y, int color, int array[5][5])
 {
     for(int r=0; r<5; r++)
     for(int c=0; c<5; c++)
@@ -479,8 +482,29 @@ void place_piece_to_CurrentBoard(int x, int y, int color, int array[5][5])
             currentBoard[y+r][x+c] = color;
 }
 
-int piece_can_be_placed(int x, int y, int color, int array[5][5])
+bool Piece_Covers_Corner_Square(int x, int y, struct List list, int array[5][5])
 {
+    bool onePieceCoversCorner = false;
+    for(int r=0;r<5;r++)
+    for(int c=0;c<5;c++)
+        if(array[c][r] == 1)
+        {
+            if(y+c == 0 && x+r == 0)
+                onePieceCoversCorner = true;
+            if(y+c == 19 && x+r == 0)
+                onePieceCoversCorner = true;
+            if(y+c == 0 && x+r == 19)
+                onePieceCoversCorner = true;
+            if(y+c == 19 && x+r == 19)
+                onePieceCoversCorner = true;
+        }
+
+    return onePieceCoversCorner;
+}
+
+int piece_can_be_placed(int x, int y, struct List list, int array[5][5])
+{
+    bool touchingCornerSameColor = false;
     for(int r=0;r<5;r++)
     for(int c=0;c<5;c++)
         if(array[c][r] == 1)
@@ -490,60 +514,36 @@ int piece_can_be_placed(int x, int y, int color, int array[5][5])
                 return 0;
 
             // not touching edges
-            if(currentBoard[y+c + 1][x+r] == color)
+            if(currentBoard[y+c + 1][x+r] == list.color)
             	return 0;
-            if(currentBoard[y+c - 1][x+r] == color)
+            if(currentBoard[y+c - 1][x+r] == list.color)
             	return 0;
-            if(currentBoard[y+c][x+r + 1] == color)
+            if(currentBoard[y+c][x+r + 1] == list.color)
             	return 0;
-            if(currentBoard[y+c][x+r - 1] == color)
+            if(currentBoard[y+c][x+r - 1] == list.color)
             	return 0;
 
-            // at least one corner touching
-            if((currentBoard[y+c + 1][x+r + 1] == color) || (currentBoard[y+c - 1][x+r + 1] == color) || (currentBoard[y+c + 1][x+r - 1] == color) || (currentBoard[y+c - 1][x+r - 1] == color))
-            {
-                return 1;
-            }
+            // at least one corner touching - for move > 1
+            if(currentBoard[y+c + 1][x+r + 1] == list.color)
+                touchingCornerSameColor = true;
+            if(currentBoard[y+c - 1][x+r + 1] == list.color)
+                touchingCornerSameColor = true;
+            if(currentBoard[y+c + 1][x+r - 1] == list.color)
+                touchingCornerSameColor = true;
+            if(currentBoard[y+c - 1][x+r - 1] == list.color)
+                touchingCornerSameColor = true;
         }
-    return 1;
+    if(list.count == 21 && Piece_Covers_Corner_Square(x, y, list, array))
+    {
+        return 1;
+    }
+    else if(touchingCornerSameColor)
+        return 1;
+    return 0;
 }
 
-void draw_piece(int x, int y, int color, int array[5][5])
+void Init_Players(struct List arr_list[4])
 {
-    for(int r=0;r<5;r++)
-    for(int c=0;c<5;c++)
-        if(array[r][c] == 1)
-        {
-            put(x+c, y+r, color);
-        }
-}
-
-int main(void)
-{
-    // player input
-    int RIGHT_KEY_COUNTER = 0;
-    int LEFT_KEY_COUNTER = 0;
-    int UP_KEY_COUNTER = 0;
-    int DOWN_KEY_COUNTER = 0;
-    int Z_KEY_COUNTER = 0;
-    int X_KEY_COUNTER = 0;
-    int C_KEY_COUNTER = 0;
-    int SPACE_KEY_COUNTER = 0;
-
-    int pieceLookup_len = 21;  // number of pieces
-
-    // active piece variables
-    int height, width, max_rot, dummy;
-    int active_x = 0;
-    int active_y = 0;
-    int rot = 0;       // init rotation
-    int piece_idx = 0;
-    int player = 0;
-
-    // init players pieces
-    struct List P1_List = __init__();
-    List_Populate(&P1_List);
-
     // PLAYER 1
     arr_list[0] =  __init__();
     arr_list[0].color = blue();
@@ -563,11 +563,44 @@ int main(void)
     arr_list[3] =  __init__();
     arr_list[3].color = green();
     List_Populate(&arr_list[3]);
+}
 
-    // pick first piece
-    max_rot = pieceStats[arr_list[0].array[piece_idx]][0];
-    height = pieceStats[arr_list[0].array[piece_idx]][1];
-    width = pieceStats[arr_list[0].array[piece_idx]][2];
+void draw_piece(int x, int y, int color, int array[5][5])
+{
+    for(int r=0;r<5;r++)
+    for(int c=0;c<5;c++)
+        if(array[r][c] == 1)
+        {
+            put(x+c, y+r, color);
+        }
+}
+
+int main(void)
+{
+    // ensure keys don't repeat
+    int RIGHT_KEY_COUNTER = 0;
+    int LEFT_KEY_COUNTER = 0;
+    int UP_KEY_COUNTER = 0;
+    int DOWN_KEY_COUNTER = 0;
+    int Z_KEY_COUNTER = 0;
+    int X_KEY_COUNTER = 0;
+    int C_KEY_COUNTER = 0;
+    int SPACE_KEY_COUNTER = 0;
+
+    // active piece variables
+    int height, width, max_rot, dummy;
+    int active_x = 0;   // x of active piece 
+    int active_y = 0;   // y of active piece 
+    int rot = 0;        // init rotation
+    int piece_idx = 0;  // points to array of player's pieces
+    int player = 0;     // keeps track of player
+
+    Init_Players(arr_list);
+ 
+    // grab meta data for selected piece
+    max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
+    height = pieceStats[arr_list[player].array[piece_idx]][1];
+    width = pieceStats[arr_list[player].array[piece_idx]][2];
 
     setup();
     resize(20);
@@ -628,7 +661,7 @@ int main(void)
             }
         } else Z_KEY_COUNTER = 0;
 
-        // swap piece
+        // swap piece (forwards)
         if(X_KEY())
         {
             X_KEY_COUNTER += 1;
@@ -648,15 +681,11 @@ int main(void)
             }
         } else X_KEY_COUNTER = 0;
 
-        // change color
-        if(C_KEY())
-        {
-            C_KEY_COUNTER += 1;
-            if(C_KEY_COUNTER == 1){
-                player += 1;
-                if(player >= 4) player = 0;
-            }
-        } else C_KEY_COUNTER = 0;
+        // swap piece (backwards)
+        // if(C_KEY())
+        // {
+
+        // }
 
         // keep pieces on screen
         if(active_x + width > 20) active_x -= 1;
@@ -671,43 +700,47 @@ int main(void)
             SPACE_KEY_COUNTER += 1;
             if(SPACE_KEY_COUNTER == 1){
                 if(piece_can_be_placed(
-                    active_x,
-                    active_y,
-                    arr_list[player].color,
-                    pieceLookup[arr_list[player].array[piece_idx]][rot]))
+                    active_x, active_y, arr_list[player],
+                    pieceLookup[arr_list[player].array[piece_idx]][rot]
+                ))
                 {
-                    place_piece_to_CurrentBoard(
+                    write_piece_to_CurrentBoard(
                         active_x,
                         active_y,
                         arr_list[player].color,
                         pieceLookup[arr_list[player].array[piece_idx]][rot]
                     );
 
-                    printf("Player %d \n", player+1);
-
+                    // remove piece from list
+                    List_Remove_Int(&arr_list[player], arr_list[player].array[piece_idx]);
+                    
                     // advance color
                     player += 1;
                     if(player >= 4) player = 0;
-
-                    // remove piece from list
-                    List_Remove_Int(&arr_list[player], arr_list[player].array[piece_idx]);
-                    List_Print_Count(&arr_list[player]);
 
                     // reset variables
                     max_rot = pieceStats[arr_list[player].array[piece_idx]][0];
                     height = pieceStats[arr_list[player].array[piece_idx]][1];
                     width = pieceStats[arr_list[player].array[piece_idx]][2];
 
+                    #if DEBUG == 1
+                        printf("Player %d \n", player+1);
+                        List_Print_Count(&arr_list[player]);
+                    #endif
+
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
 
-        // reset board
+        // RESET GAME
         if(R_KEY())
         {
+            // clear the board
             for(int i=0; i<20; i++)
             for(int j=0; j<20; j++)
                 currentBoard[i][j] = 0x0;
+
+            Init_Players(arr_list);
         }
 
         // draw current board
