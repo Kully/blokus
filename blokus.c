@@ -2,16 +2,29 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+int blue()   {return 0xff0000ff;}   // PLAYER 1
+int yellow() {return 0xffffff00;}   // PLAYER 2
+int red()    {return 0xffff0000;}   // PLAYER 3
+int green()  {return 0xff00ff00;}   // PLAYER 4
+
 typedef struct
 {
+    int id;
+    int color;
     char* array;
     int count;
 }
 List;
 
+typedef struct
+{}
+arr_list[4];
+
 List __init__()
 {
     List list;
+    list.id = 0;
+    list.color = 0xff0000ff;
     list.count = 21;
     list.array = malloc(list.count);
     return list;
@@ -51,11 +64,15 @@ void List_Remove_Int(List* self, int k)
     self->array = realloc(self->array, self->count);
 }
 
-void List_Print(List* self)
+void List_Print_Array(List* self)
 {
     printf("list->array:\n");
     for(int i = 0; i < self->count; i++)
         printf("  >> %d\n", self->array[i]);
+}
+
+void List_Print_Count(List* self)
+{
     printf("list->count\n  >> %d\n", self->count);
 }
 
@@ -64,11 +81,6 @@ void List_Destroy(List* self)
     free(self->array);  // same as list.array but use -> for pointer
     self->array = NULL;
 }
-
-int blue()   {return 0xff0000ff;}   // PLAYER 1
-int yellow() {return 0xffffff00;}   // PLAYER 2
-int red()    {return 0xffff0000;}   // PLAYER 3
-int green()  {return 0xff00ff00;}   // PLAYER 4
 
 int pieceLookup[][4][5][5] = {
     // PIECE 1
@@ -525,14 +537,23 @@ int main(void)
     int rot = 0;       // init rotation
     int piece_idx = 0;
 
-    
     int c_idx = 0;
     int colors[4] = {blue(), yellow(), red(), green()};
 
-    // pointers to pieces
+    // init players pieces
     List P1_List = __init__();
     List_Populate(&P1_List);
-    List_Remove_Int(&P1_List, 5);
+
+    List P2_List = __init__();
+    List_Populate(&P2_List);
+
+    List P3_List = __init__();
+    List_Populate(&P3_List);
+
+    List P4_List = __init__();
+    List_Populate(&P4_List);
+
+    // arr_list[0]
 
     max_rot = pieceStats[piece_idx][0];
     height = pieceStats[piece_idx][1];
@@ -602,17 +623,18 @@ int main(void)
         {
             X_KEY_COUNTER += 1;
             if(X_KEY_COUNTER == 1){
+                
                 piece_idx += 1;
-                if(piece_idx >= pieceLookup_len)
+                if(piece_idx >= P1_List.count)
                 {
                     piece_idx = 0;
                 }
                 rot = 0;  // init rotation upon swapping piece
 
                 // reset variables
-                max_rot = pieceStats[piece_idx][0];
-                height = pieceStats[piece_idx][1];
-                width = pieceStats[piece_idx][2];
+                max_rot = pieceStats[P1_List.array[piece_idx]][0];
+                height = pieceStats[P1_List.array[piece_idx]][1];
+                width = pieceStats[P1_List.array[piece_idx]][2];
             }
         } else X_KEY_COUNTER = 0;
 
@@ -638,25 +660,27 @@ int main(void)
         if(SPACE_KEY())
         {
             if(piece_can_be_placed(active_x, active_y, colors[c_idx],
-                                   pieceLookup[piece_idx][rot]))
+                                   pieceLookup[P1_List.array[piece_idx]][rot]))
             {
                 place_piece_to_CurrentBoard(
                     active_x,
                     active_y,
                     colors[c_idx],
-                    pieceLookup[piece_idx][rot]
+                    pieceLookup[P1_List.array[piece_idx]][rot]
                 );
 
-                // advance color - DISABLED FOR NOW
-                // c_idx += 1;
-                // if(c_idx >= 4) c_idx = 0;
+                // advance color
+                c_idx += 1;
+                if(c_idx >= 4) c_idx = 0;
 
-                // piece_idx = 0;
+                // remove piece from list
+                List_Remove_Int(&P1_List, P1_List.array[piece_idx]);
+                List_Print_Count(&P1_List);
 
                 // reset variables
-                max_rot = pieceStats[piece_idx][0];
-                height = pieceStats[piece_idx][1];
-                width = pieceStats[piece_idx][2];
+                max_rot = pieceStats[P1_List.array[piece_idx]][0];
+                height = pieceStats[P1_List.array[piece_idx]][1];
+                width = pieceStats[P1_List.array[piece_idx]][2];
 
             }
         }
@@ -677,7 +701,7 @@ int main(void)
             active_x,
             active_y,
             colors[c_idx],
-            pieceLookup[piece_idx][rot]
+            pieceLookup[P1_List.array[piece_idx]][rot]
         );
 
         unlock();

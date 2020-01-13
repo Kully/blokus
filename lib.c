@@ -21,7 +21,7 @@ void setup(void)
 {
     srand(time(NULL));
     window = SDL_CreateWindow(
-            "blockus",
+            "blokus",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
             xres,
