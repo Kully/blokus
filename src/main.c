@@ -90,24 +90,28 @@ int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
 void Init_Players(struct Player arr_list[4])
 {
     // PLAYER 1
-    arr_list[0] =  List_Init();
+    arr_list[0] =  Player_Init();
     arr_list[0].color = 0xff0000ff;  // blue
-    List_Populate(&arr_list[0]);
+    arr_list[0].isHuman = true;  // HUMAN
+    Player_Populate(&arr_list[0]);
 
     // PLAYER 2
-    arr_list[1] =  List_Init();
+    arr_list[1] =  Player_Init();
     arr_list[1].color = 0xffffff00;  // yellow
-    List_Populate(&arr_list[1]);
+    arr_list[1].isHuman = true;  // HUMAN
+    Player_Populate(&arr_list[1]);
 
     // PLAYER 3
-    arr_list[2] =  List_Init();
+    arr_list[2] =  Player_Init();
     arr_list[2].color = 0xffff0000;  // red
-    List_Populate(&arr_list[2]);
+    arr_list[2].isHuman = false;  // BOT
+    Player_Populate(&arr_list[2]);
 
     // PLAYER 4
-    arr_list[3] =  List_Init();
+    arr_list[3] =  Player_Init();
     arr_list[3].color = 0xff00ff00;  // green
-    List_Populate(&arr_list[3]);
+    arr_list[3].isHuman = true;  // HUMAN
+    Player_Populate(&arr_list[3]);
 }
 
 void Draw_Piece(int x, int y, int color, int array[5][5])
@@ -119,14 +123,6 @@ void Draw_Piece(int x, int y, int color, int array[5][5])
             io_put(x+c, y+r, color);
         }
 }
-
-// void set_rot_width_height_of_piece()
-// {
-//     // reset variables
-//     max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
-//     height = Piece_Info[arr_list[player].array[piece_idx]][1];
-//     width = Piece_Info[arr_list[player].array[piece_idx]][2];
-// }
 
 int main(void)
 {
@@ -145,15 +141,15 @@ int main(void)
     int active_x = 0;   // x of active piece 
     int active_y = 0;   // y of active piece 
     int rot = 0;        // init rotation
-    int piece_idx = 0;  // points to array of player's pieces
+    int list_idx = 0;  // points to array of player's pieces
     int player = 0;     // keeps track of player
 
     Init_Players(arr_list);
  
     // grab meta data for selected piece
-    max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
-    height = Piece_Info[arr_list[player].array[piece_idx]][1];
-    width = Piece_Info[arr_list[player].array[piece_idx]][2];
+    max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
+    height = Piece_Info[arr_list[player].array[list_idx]][1];
+    width = Piece_Info[arr_list[player].array[list_idx]][2];
 
     io_setup();
     io_resize(20);
@@ -161,6 +157,8 @@ int main(void)
     {
         io_lock();
         io_clear();
+
+        // if()
 
         // move up
         if(io_up_key())
@@ -220,15 +218,15 @@ int main(void)
             Z_KEY_COUNTER += 1;
             if(Z_KEY_COUNTER == 1)
             {
-                piece_idx -= 1;
-                if(piece_idx < 0)
-                    piece_idx = arr_list[player].count - 1;
+                list_idx -= 1;
+                if(list_idx < 0)
+                    list_idx = arr_list[player].count - 1;
                 rot = 0;  // init rotation upon swapping piece
 
                 // reset variables
-                max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
-                height = Piece_Info[arr_list[player].array[piece_idx]][1];
-                width = Piece_Info[arr_list[player].array[piece_idx]][2];
+                max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
+                height = Piece_Info[arr_list[player].array[list_idx]][1];
+                width = Piece_Info[arr_list[player].array[list_idx]][2];
             }
         } else Z_KEY_COUNTER = 0;
 
@@ -238,15 +236,15 @@ int main(void)
             X_KEY_COUNTER += 1;
             if(X_KEY_COUNTER == 1)
             {
-                piece_idx += 1;
-                if(piece_idx >= arr_list[player].count)
-                    piece_idx = 0;
+                list_idx += 1;
+                if(list_idx >= arr_list[player].count)
+                    list_idx = 0;
                 rot = 0;  // init rotation upon swapping piece
 
                 // reset variables
-                max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
-                height = Piece_Info[arr_list[player].array[piece_idx]][1];
-                width = Piece_Info[arr_list[player].array[piece_idx]][2];
+                max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
+                height = Piece_Info[arr_list[player].array[list_idx]][1];
+                width = Piece_Info[arr_list[player].array[list_idx]][2];
             }
         } else X_KEY_COUNTER = 0;
 
@@ -264,31 +262,31 @@ int main(void)
             if(SPACE_KEY_COUNTER == 1){
                 if(Can_Place_Piece(
                     active_x, active_y, arr_list[player],
-                    Pieces[arr_list[player].array[piece_idx]][rot]
+                    Pieces[arr_list[player].array[list_idx]][rot]
                 ))
                 {
                     Write_Piece_To_CurrentBoard(
                         active_x,
                         active_y,
                         arr_list[player].color,
-                        Pieces[arr_list[player].array[piece_idx]][rot]
+                        Pieces[arr_list[player].array[list_idx]][rot]
                     );
 
                     #if DEBUG == 1
                         printf("Player %d Played\n", player+1);
-                        List_Print_Count(&arr_list[player]);
+                        Player_Print_Count(&arr_list[player]);
                     #endif
 
-                    List_Remove_Int(&arr_list[player], arr_list[player].array[piece_idx]);
+                    Player_Remove_Int(&arr_list[player], arr_list[player].array[list_idx]);
                     
                     // advance color
                     player += 1;
                     if(player >= 4) player = 0;
 
                     // reset variables
-                    max_rot = Piece_Info[arr_list[player].array[piece_idx]][0];
-                    height = Piece_Info[arr_list[player].array[piece_idx]][1];
-                    width = Piece_Info[arr_list[player].array[piece_idx]][2];
+                    max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
+                    height = Piece_Info[arr_list[player].array[list_idx]][1];
+                    width = Piece_Info[arr_list[player].array[list_idx]][2];
 
                 }
             }
@@ -313,7 +311,7 @@ int main(void)
             active_x,
             active_y,
             arr_list[player].color,
-            Pieces[arr_list[player].array[piece_idx]][rot]
+            Pieces[arr_list[player].array[list_idx]][rot]
         );
 
         io_unlock();

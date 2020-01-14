@@ -8,26 +8,26 @@ struct Player
     int color;
     char* array;
     int count;
-    bool isHuman
+    bool isHuman;
 };
 
-struct Player List_Init()
+struct Player Player_Init()
 {
     struct Player list;
     list.color = 0xff0000ff;
     list.array = malloc(list.count);
     list.count = 21;
-    list.isHuman = true;
+    list.isHuman = true;  // human by default
     return list;
 }
 
-void List_Populate(struct Player* self)
+void Player_Populate(struct Player* self)
 {
     for(int i = 0; i < self->count; i++)
         self->array[i] = i;
 }
 
-int List_Contains_Int(struct Player* self, int k)
+int Player_Contains_Int(struct Player* self, int k)
 { 
     for(int i = 0; i < self->count; i++)
     {
@@ -37,7 +37,7 @@ int List_Contains_Int(struct Player* self, int k)
     return 0;
 }
 
-void List_Remove_Int(struct Player* self, int k)
+void Player_Remove_Int(struct Player* self, int k)
 {
     for(int i = 0; i < self->count; i++)
     {
@@ -55,19 +55,19 @@ void List_Remove_Int(struct Player* self, int k)
     self->array = realloc(self->array, self->count);
 }
 
-void List_Print_Array(struct Player* self)
+void Player_Print_Array(struct Player* self)
 {
     printf("list->array:\n");
     for(int i = 0; i < self->count; i++)
         printf("  >> %d\n", self->array[i]);
 }
 
-void List_Print_Count(struct Player* self)
+void Player_Print_Count(struct Player* self)
 {
     printf("  >>%d pieces left\n", self->count);
 }
 
-void List_Destroy(struct Player* self)
+void Player_Destroy(struct Player* self)
 {
     free(self->array);  // same as list.array but use -> for pointer
     self->array = NULL;
