@@ -8,14 +8,16 @@ struct Player
     int color;
     char* array;
     int count;
+    bool isHuman
 };
 
 struct Player List_Init()
 {
     struct Player list;
     list.color = 0xff0000ff;
-    list.count = 21;
     list.array = malloc(list.count);
+    list.count = 21;
+    list.isHuman = true;
     return list;
 }
 
