@@ -10,7 +10,7 @@ struct List
     int count;
 };
 
-struct List __init__()
+struct List List_Init()
 {
     struct List list;
     list.color = 0xff0000ff;
@@ -18,8 +18,6 @@ struct List __init__()
     list.array = malloc(list.count);
     return list;
 }
-
-struct List arr_list[4];  // holds structs for Players 1,2,3,4
 
 void List_Populate(struct List* self)
 {

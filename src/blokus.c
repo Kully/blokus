@@ -8,6 +8,8 @@
 #define DEBUG 1
 
 
+struct List arr_list[4];  // holds structs for Players 1,2,3,4
+
 int currentBoard[20][20] = {0};  // placed pixels in 2d array
 
 void CurrentBoard_To_Vram(int array[20][20])
@@ -88,22 +90,22 @@ int Can_Place_Piece(int x, int y, struct List list, int array[5][5])
 void Init_Players(struct List arr_list[4])
 {
     // PLAYER 1
-    arr_list[0] =  __init__();
+    arr_list[0] =  List_Init();
     arr_list[0].color = 0xff0000ff;  // blue
     List_Populate(&arr_list[0]);
 
     // PLAYER 2
-    arr_list[1] =  __init__();
+    arr_list[1] =  List_Init();
     arr_list[1].color = 0xffffff00;  // yellow
     List_Populate(&arr_list[1]);
 
     // PLAYER 3
-    arr_list[2] =  __init__();
+    arr_list[2] =  List_Init();
     arr_list[2].color = 0xffff0000;  // red
     List_Populate(&arr_list[2]);
 
     // PLAYER 4
-    arr_list[3] =  __init__();
+    arr_list[3] =  List_Init();
     arr_list[3].color = 0xff00ff00;  // green
     List_Populate(&arr_list[3]);
 }
