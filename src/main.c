@@ -158,7 +158,14 @@ int main(void)
         io_lock();
         io_clear();
 
-        // if()
+        if(!arr_list[player].isHuman)
+        {
+            printf("A BOT\n");
+        }
+        else
+        {
+            printf("A HUMAN\n");
+        }
 
         // move up
         if(io_up_key())
