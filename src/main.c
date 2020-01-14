@@ -1,5 +1,5 @@
 #include "io.h"
-#include "List.h"
+#include "Player.h"
 #include "Pieces.h"
 
 #include "stdio.h"
@@ -8,7 +8,7 @@
 #define DEBUG 1
 
 
-struct List arr_list[4];  // holds structs for Players 1,2,3,4
+struct Player arr_list[4];  // holds structs for Players 1,2,3,4
 
 int currentBoard[20][20] = {0};  // placed pixels in 2d array
 
@@ -27,7 +27,7 @@ void Write_Piece_To_CurrentBoard(int x, int y, int color, int array[5][5])
             currentBoard[y+r][x+c] = color;
 }
 
-bool Piece_Covers_Corner_Square(int x, int y, struct List list, int array[5][5])
+bool Piece_Covers_Corner_Square(int x, int y, struct Player list, int array[5][5])
 {
     bool onePieceCoversCorner = false;
     for(int r=0;r<5;r++)
@@ -47,7 +47,7 @@ bool Piece_Covers_Corner_Square(int x, int y, struct List list, int array[5][5])
     return onePieceCoversCorner;
 }
 
-int Can_Place_Piece(int x, int y, struct List list, int array[5][5])
+int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
 {
     bool touchingCornerSameColor = false;
     for(int r=0;r<5;r++)
@@ -87,7 +87,7 @@ int Can_Place_Piece(int x, int y, struct List list, int array[5][5])
     return 0;
 }
 
-void Init_Players(struct List arr_list[4])
+void Init_Players(struct Player arr_list[4])
 {
     // PLAYER 1
     arr_list[0] =  List_Init();

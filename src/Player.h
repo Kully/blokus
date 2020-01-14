@@ -3,29 +3,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct List
+struct Player
 {
     int color;
     char* array;
     int count;
 };
 
-struct List List_Init()
+struct Player List_Init()
 {
-    struct List list;
+    struct Player list;
     list.color = 0xff0000ff;
     list.count = 21;
     list.array = malloc(list.count);
     return list;
 }
 
-void List_Populate(struct List* self)
+void List_Populate(struct Player* self)
 {
     for(int i = 0; i < self->count; i++)
         self->array[i] = i;
 }
 
-int List_Contains_Int(struct List* self, int k)
+int List_Contains_Int(struct Player* self, int k)
 { 
     for(int i = 0; i < self->count; i++)
     {
@@ -35,7 +35,7 @@ int List_Contains_Int(struct List* self, int k)
     return 0;
 }
 
-void List_Remove_Int(struct List* self, int k)
+void List_Remove_Int(struct Player* self, int k)
 {
     for(int i = 0; i < self->count; i++)
     {
@@ -53,19 +53,19 @@ void List_Remove_Int(struct List* self, int k)
     self->array = realloc(self->array, self->count);
 }
 
-void List_Print_Array(struct List* self)
+void List_Print_Array(struct Player* self)
 {
     printf("list->array:\n");
     for(int i = 0; i < self->count; i++)
         printf("  >> %d\n", self->array[i]);
 }
 
-void List_Print_Count(struct List* self)
+void List_Print_Count(struct Player* self)
 {
     printf("  >>%d pieces left\n", self->count);
 }
 
-void List_Destroy(struct List* self)
+void List_Destroy(struct Player* self)
 {
     free(self->array);  // same as list.array but use -> for pointer
     self->array = NULL;
