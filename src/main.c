@@ -134,6 +134,7 @@ int main(void)
     int Z_KEY_COUNTER = 0;
     int X_KEY_COUNTER = 0;
     int C_KEY_COUNTER = 0;
+    int V_KEY_COUNTER = 0;
     int SPACE_KEY_COUNTER = 0;
 
     // active piece variables
@@ -210,7 +211,8 @@ int main(void)
         if(io_c_key())
         {
             C_KEY_COUNTER += 1;
-            if(C_KEY_COUNTER == 1){
+            if(C_KEY_COUNTER == 1)
+            {
                 rot += 1;
                 if(rot >= max_rot) rot = 0;
 
@@ -221,7 +223,16 @@ int main(void)
             }
         } else C_KEY_COUNTER = 0;
 
-        // last piece (backwards)
+        if(io_v_key())
+        {
+            Z_KEY_COUNTER += 1;
+            if(Z_KEY_COUNTER)
+            {
+
+            }
+        } else Z_KEY_COUNTER = 0;
+
+        // swap piece (backwards)
         if(io_z_key())
         {
             Z_KEY_COUNTER += 1;
@@ -239,7 +250,7 @@ int main(void)
             }
         } else Z_KEY_COUNTER = 0;
 
-        // next piece (forwards)
+        // swap piece (forwards)
         if(io_x_key())
         {
             X_KEY_COUNTER += 1;

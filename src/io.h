@@ -45,4 +45,6 @@ int io_c_key(void);
 
 int io_r_key(void);
 
+int io_v_key(void);
+
 bool io_end(void);
