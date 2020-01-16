@@ -161,10 +161,12 @@ int main(void)
         if(!arr_list[player].isHuman)
         {
             printf("A BOT\n");
+            // do AI stuff from AI.h
         }
         else
         {
             printf("A HUMAN\n");
+            // do io stuff
         }
 
         // move up

@@ -152,6 +152,16 @@ int io_r_key(void)
     return 0;
 }
 
+int io_v_key(void)
+{
+    SDL_PumpEvents();
+    if(key[SDL_SCANCODE_V])
+    {
+        return 1;
+    }
+    return 0;
+}
+
 int io_space_key(void)
 {
     SDL_PumpEvents();
