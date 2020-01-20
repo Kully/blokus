@@ -79,9 +79,7 @@ int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
                 touchingCornerSameColor = true;
         }
     if(list.count == 21 && Piece_Covers_Corner_Square(x, y, list, array))
-    {
         return 1;
-    }
     else if(touchingCornerSameColor)
         return 1;
     return 0;
@@ -91,7 +89,7 @@ void Init_Players(struct Player arr_list[4])
 {
     // PLAYER 1
     arr_list[0] =  Player_Init();
-    arr_list[0].color = 0xff0000ff;  // blue
+    arr_list[0].color = 0xffb0eacd;  // blue  0xff0000ff
     arr_list[0].isHuman = true;  // HUMAN
     Player_Populate(&arr_list[0]);
 
@@ -114,6 +112,12 @@ void Init_Players(struct Player arr_list[4])
     Player_Populate(&arr_list[3]);
 }
 
+void Flip_Piece_Horizontally(int array[5][5])
+{
+    // malloc(...)
+    // point to new one
+}
+
 void Draw_Piece(int x, int y, int color, int array[5][5])
 {
     for(int r=0;r<5;r++)
@@ -131,6 +135,7 @@ int main(void)
     int LEFT_KEY_COUNTER = 0;
     int UP_KEY_COUNTER = 0;
     int DOWN_KEY_COUNTER = 0;
+    int A_KEY_COUNTER = 0;
     int Z_KEY_COUNTER = 0;
     int X_KEY_COUNTER = 0;
     int C_KEY_COUNTER = 0;
@@ -161,20 +166,19 @@ int main(void)
 
         if(!arr_list[player].isHuman)
         {
-            printf("A BOT\n");
-            // do AI stuff from AI.h
+            // do ai stuff
         }
         else
         {
-            printf("A HUMAN\n");
-            // do io stuff
+            // printf("A HUMAN\n");
         }
 
         // move up
         if(io_up_key())
         {
             UP_KEY_COUNTER += 1;
-            if(UP_KEY_COUNTER == 1){
+            if(UP_KEY_COUNTER == 1)
+            {
                 active_y -= 1;
             }
         } else UP_KEY_COUNTER = 0;
@@ -183,7 +187,8 @@ int main(void)
         if(io_down_key())
         {            
             DOWN_KEY_COUNTER += 1;
-            if(DOWN_KEY_COUNTER == 1){
+            if(DOWN_KEY_COUNTER == 1)
+            {
                 active_y += 1;
             }
         } else DOWN_KEY_COUNTER = 0;
@@ -192,7 +197,8 @@ int main(void)
         if(io_left_key())
         {
             LEFT_KEY_COUNTER += 1;
-            if(LEFT_KEY_COUNTER == 1){
+            if(LEFT_KEY_COUNTER == 1)
+            {
                 active_x -= 1;
             }
         } else LEFT_KEY_COUNTER = 0;
@@ -201,11 +207,11 @@ int main(void)
         if(io_right_key())
         {
             RIGHT_KEY_COUNTER += 1;
-            if(RIGHT_KEY_COUNTER == 1){
+            if(RIGHT_KEY_COUNTER == 1)
+            {
                 active_x += 1;
             }
         } else RIGHT_KEY_COUNTER = 0;
-
 
         // rotate piece
         if(io_c_key())
@@ -223,14 +229,15 @@ int main(void)
             }
         } else C_KEY_COUNTER = 0;
 
-        if(io_v_key())
-        {
-            Z_KEY_COUNTER += 1;
-            if(Z_KEY_COUNTER)
-            {
+        // flip horizontally
+        // if(io_a_key())
+        // {
+        //     A_KEY_COUNTER += 1;
+        //     if(A_KEY_COUNTER)
+        //     {
 
-            }
-        } else Z_KEY_COUNTER = 0;
+        //     }
+        // } else A_KEY_COUNTER = 0;
 
         // swap piece (backwards)
         if(io_z_key())
@@ -279,7 +286,8 @@ int main(void)
         if(io_space_key())
         {
             SPACE_KEY_COUNTER += 1;
-            if(SPACE_KEY_COUNTER == 1){
+            if(SPACE_KEY_COUNTER == 1)
+            {
                 if(Can_Place_Piece(
                     active_x, active_y, arr_list[player],
                     Pieces[arr_list[player].array[list_idx]][rot]

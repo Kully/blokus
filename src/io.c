@@ -112,6 +112,16 @@ int io_right_key(void)
     return 0;
 }
 
+int io_a_key(void)
+{
+    SDL_PumpEvents();
+    if(key[SDL_SCANCODE_A])
+    {
+        return 1;
+    }
+    return 0;
+}
+
 int io_z_key(void)
 {
     SDL_PumpEvents();

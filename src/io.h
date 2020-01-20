@@ -37,6 +37,8 @@ int io_right_key(void);
 
 int io_space_key(void);
 
+int io_a_key(void);
+
 int io_z_key(void);
 
 int io_x_key(void);
