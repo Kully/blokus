@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int Pieces[][4][5][5] = {
+static int Pieces[][4][5][5] = {
     // PIECE 1
     {
         {
@@ -363,7 +363,7 @@ int Pieces[][4][5][5] = {
 };
 
 // holds max_rotations, height, width of pieces
-int Piece_Info[21][3] = {
+static int Piece_Info[21][3] = {
     {1, 1, 1},  // 1
     {2, 2, 1},  // 2
     {2, 3, 1},  // 3

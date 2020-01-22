@@ -88,34 +88,53 @@ int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
 void Init_Players(struct Player arr_list[4])
 {
     // PLAYER 1
-    arr_list[0] =  Player_Init();
-    arr_list[0].color = 0xffb0eacd;  // blue  0xff0000ff
-    arr_list[0].isHuman = true;  // HUMAN
+    arr_list[0] =  Player_Init();    // 0xffb0eacd
+    arr_list[0].color = 0xff0000ff;  // blue
+    arr_list[0].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[0]);
 
     // PLAYER 2
     arr_list[1] =  Player_Init();
     arr_list[1].color = 0xffffff00;  // yellow
-    arr_list[1].isHuman = true;  // HUMAN
+    arr_list[1].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[1]);
 
     // PLAYER 3
     arr_list[2] =  Player_Init();
     arr_list[2].color = 0xffff0000;  // red
-    arr_list[2].isHuman = false;  // BOT
+    arr_list[2].isHuman = false;     // BOT
     Player_Populate(&arr_list[2]);
 
     // PLAYER 4
     arr_list[3] =  Player_Init();
     arr_list[3].color = 0xff00ff00;  // green
-    arr_list[3].isHuman = true;  // HUMAN
+    arr_list[3].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[3]);
 }
 
-void Flip_Piece_Horizontally(int array[5][5])
+// void Write_(int array[5][5])
+// {
+//     // write to malloc() array indices
+// }
+
+void Print_Array(int array[5][5])  // debugging
 {
-    // malloc(...)
-    // point to new one
+    for(int r=0;r<5;r++)
+    {
+        printf("\n");
+        for(int c=0;c<5;c++)
+        {
+            if(array[r][c] == 1)
+            {
+                printf("[X]");
+            }
+            else
+            {
+                printf("[ ]");
+            }
+        }
+    }
+    printf("\n");
 }
 
 void Draw_Piece(int x, int y, int color, int array[5][5])
@@ -136,6 +155,7 @@ int main(void)
     int UP_KEY_COUNTER = 0;
     int DOWN_KEY_COUNTER = 0;
     int A_KEY_COUNTER = 0;
+    int P_KEY_COUNTER = 0;
     int Z_KEY_COUNTER = 0;
     int X_KEY_COUNTER = 0;
     int C_KEY_COUNTER = 0;
@@ -147,8 +167,11 @@ int main(void)
     int active_x = 0;   // x of active piece 
     int active_y = 0;   // y of active piece 
     int rot = 0;        // init rotation
-    int list_idx = 0;  // points to array of player's pieces
     int player = 0;     // keeps track of player
+    int list_idx = 0;   // points to player's pieces
+    bool reflect_piece = false;
+
+    // int love[5][5] = malloc(25);
 
     Init_Players(arr_list);
  
@@ -230,14 +253,16 @@ int main(void)
         } else C_KEY_COUNTER = 0;
 
         // flip horizontally
-        // if(io_a_key())
-        // {
-        //     A_KEY_COUNTER += 1;
-        //     if(A_KEY_COUNTER)
-        //     {
-
-        //     }
-        // } else A_KEY_COUNTER = 0;
+        if(io_a_key())
+        {
+            A_KEY_COUNTER += 1;
+            if(A_KEY_COUNTER == 1)
+            {
+                // reflect_piece = !reflect_piece;
+                // printf("reflect_piece: %d \n", reflect_piece);
+                Print_Array(Pieces[arr_list[player].array[list_idx]][rot]);
+            }
+        } else A_KEY_COUNTER = 0;
 
         // swap piece (backwards)
         if(io_z_key())
@@ -315,7 +340,6 @@ int main(void)
                     max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
                     height = Piece_Info[arr_list[player].array[list_idx]][1];
                     width = Piece_Info[arr_list[player].array[list_idx]][2];
-
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
