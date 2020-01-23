@@ -112,11 +112,6 @@ void Init_Players(struct Player arr_list[4])
     Player_Populate(&arr_list[3]);
 }
 
-// void Write_(int array[5][5])
-// {
-//     // write to malloc() array indices
-// }
-
 void Print_Array(int array[5][5])  // debugging
 {
     for(int r=0;r<5;r++)
@@ -124,7 +119,7 @@ void Print_Array(int array[5][5])  // debugging
         printf("\n");
         for(int c=0;c<5;c++)
         {
-            if(array[r][c] == 1)
+            if(array[4-r][c] == 1)
             {
                 printf("[X]");
             }
@@ -145,6 +140,16 @@ void Draw_Piece(int x, int y, int color, int array[5][5])
         {
             io_put(x+c, y+r, color);
         }
+}
+
+void Reflect_Piece(int array[5][5], int *ptr_Piece_Preview)
+{
+    for(int r=0;r<5;r++)
+    for(int c=0;c>5;c++)
+        if(array[r][c] == 1)
+            ptr_Piece_Preview[r][c] = 1;
+        else
+            ptr_Piece_Preview[r][c] = 0;
 }
 
 int main(void)
@@ -169,9 +174,16 @@ int main(void)
     int rot = 0;        // init rotation
     int player = 0;     // keeps track of player
     int list_idx = 0;   // points to player's pieces
-    bool reflect_piece = false;
+    bool p_flipped = false;
 
-    // int love[5][5] = malloc(25);
+    int Piece_Preview[5][5] = {
+        {0,0,0,0,0},
+        {0,0,0,0,0},
+        {0,0,0,0,0},
+        {0,0,0,0,0},
+        {0,0,0,0,0},
+    };
+    int *ptr_Piece_Preview[5][5] = &Piece_Preview[0][0];
 
     Init_Players(arr_list);
  
@@ -258,9 +270,15 @@ int main(void)
             A_KEY_COUNTER += 1;
             if(A_KEY_COUNTER == 1)
             {
-                // reflect_piece = !reflect_piece;
-                // printf("reflect_piece: %d \n", reflect_piece);
-                Print_Array(Pieces[arr_list[player].array[list_idx]][rot]);
+                p_flipped = !p_flipped;
+
+                Reflect_Piece(
+                    Pieces[arr_list[player].array[list_idx]][rot],  // array
+                    &ptr_Piece_Preview
+                );
+
+                // Print_Array(Pieces[arr_list[player].array[list_idx]][rot]);
+
             }
         } else A_KEY_COUNTER = 0;
 
@@ -303,7 +321,6 @@ int main(void)
         // keep pieces on screen
         if(active_x + width > 20) active_x -= 1;
         if(active_x < 0) active_x += 1;
-
         if(active_y + height > 20) active_y -= 1;
         if(active_y < 0) active_y += 1;
 
@@ -330,7 +347,10 @@ int main(void)
                         Player_Print_Count(&arr_list[player]);
                     #endif
 
-                    Player_Remove_Int(&arr_list[player], arr_list[player].array[list_idx]);
+                    Player_Remove_Int(
+                        &arr_list[player],
+                        arr_list[player].array[list_idx]
+                    );
                     
                     // advance color
                     player += 1;
