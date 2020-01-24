@@ -76,9 +76,7 @@ int io_up_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_UP])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -86,9 +84,7 @@ int io_down_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_DOWN])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -96,9 +92,7 @@ int io_left_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_LEFT])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -106,9 +100,7 @@ int io_right_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_RIGHT])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -116,9 +108,7 @@ int io_a_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_A])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -126,9 +116,7 @@ int io_s_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_S])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -136,9 +124,7 @@ int io_p_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_P])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -146,9 +132,7 @@ int io_z_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_Z])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -156,9 +140,7 @@ int io_x_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_X])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -166,9 +148,7 @@ int io_c_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_C])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -176,9 +156,7 @@ int io_r_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_R])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -186,9 +164,7 @@ int io_v_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_V])
-    {
         return 1;
-    }
     return 0;
 }
 
@@ -196,9 +172,7 @@ int io_space_key(void)
 {
     SDL_PumpEvents();
     if(key[SDL_SCANCODE_SPACE])
-    {
         return 1;
-    }
     return 0;
 }
 
