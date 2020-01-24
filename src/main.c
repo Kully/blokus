@@ -8,32 +8,28 @@
 #define DEBUG 1
 
 
-struct Player arr_list[4];  // holds structs for Players 1,2,3,4
+struct Player arr_list[4];       // holds structs for Players 1,2,3,4
 
 int currentBoard[20][20] = {0};  // placed pixels in 2d array
 
 void Init_Players(struct Player arr_list[4])
 {
-    // PLAYER 1
-    arr_list[0] =  Player_Init();    // 0xffb0eacd
+    arr_list[0] =  Player_Init();    // PLAYER 1
     arr_list[0].color = 0xff0000ff;  // blue
     arr_list[0].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[0]);
 
-    // PLAYER 2
-    arr_list[1] =  Player_Init();
+    arr_list[1] =  Player_Init();    // PLAYER 2
     arr_list[1].color = 0xffffff00;  // yellow
     arr_list[1].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[1]);
 
-    // PLAYER 3
-    arr_list[2] =  Player_Init();
+    arr_list[2] =  Player_Init();    // PLAYER 3
     arr_list[2].color = 0xffff0000;  // red
     arr_list[2].isHuman = false;     // BOT
     Player_Populate(&arr_list[2]);
 
-    // PLAYER 4
-    arr_list[3] =  Player_Init();
+    arr_list[3] =  Player_Init();    // PLAYER 4
     arr_list[3].color = 0xff00ff00;  // green
     arr_list[3].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[3]);
@@ -120,13 +116,9 @@ void Print_Array(int array[5][5])
         for(int c=0;c<5;c++)
         {
             if(array[r][c] == 1)
-            {
                 printf("[X]");
-            }
             else
-            {
                 printf("[ ]");
-            }
         }
     }
     printf("\n");
@@ -159,7 +151,6 @@ void Swap_Rows(int grid[5][5], int row_a, int row_b)
 {
     int dummy_row[5] = {0,0,0,0,0};
 
-    // copy to dummy row
     for(int i=0;i<5;i++)
     {
         dummy_row[i] = grid[row_a][i];
@@ -197,6 +188,13 @@ void Flip_Preview_Piece(int grid[5][5])
     }
 }
 
+void Set_Piece_Stats(int player, int list_idx, int* max_rot, int* height, int* width)
+{
+    *max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
+    *height = Piece_Info[arr_list[player].array[list_idx]][1];
+    *width = Piece_Info[arr_list[player].array[list_idx]][2];
+}
+
 int main(void)
 {
     // ensure keys don't repeat
@@ -213,7 +211,9 @@ int main(void)
     int SPACE_KEY_COUNTER = 0;
 
     // active piece variables
-    int height, width, max_rot, dummy;
+    int max_rot, height, width;
+    int* ptr_max_rot = &max_rot;
+    int dummy;
     int active_x = 0;                     // x of active piece 
     int active_y = 0;                     // y of active piece 
     int rot = 0;                          // init rotation
@@ -231,11 +231,7 @@ int main(void)
 
 
     Init_Players(arr_list);
- 
-    // grab meta data for selected piece
-    max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
-    height = Piece_Info[arr_list[player].array[list_idx]][1];
-    width = Piece_Info[arr_list[player].array[list_idx]][2];
+    Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
 
     io_setup();
     io_resize(20);
@@ -243,15 +239,6 @@ int main(void)
     {
         io_lock();
         io_clear();
-
-        if(!arr_list[player].isHuman)
-        {
-            // do ai stuff
-        }
-        else
-        {
-            // printf("A HUMAN\n");
-        }
 
         // move up
         if(io_up_key())
@@ -340,10 +327,7 @@ int main(void)
                     list_idx = arr_list[player].count - 1;
                 rot = 0;  // init rotation upon swapping piece
 
-                // reset variables
-                max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
-                height = Piece_Info[arr_list[player].array[list_idx]][1];
-                width = Piece_Info[arr_list[player].array[list_idx]][2];
+                Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
             }
         } else Z_KEY_COUNTER = 0;
 
@@ -358,10 +342,7 @@ int main(void)
                     list_idx = 0;
                 rot = 0;  // init rotation upon swapping piece
 
-                // reset variables
-                max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
-                height = Piece_Info[arr_list[player].array[list_idx]][1];
-                width = Piece_Info[arr_list[player].array[list_idx]][2];
+                Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
             }
         } else X_KEY_COUNTER = 0;
 
@@ -400,10 +381,7 @@ int main(void)
                     player += 1;
                     if(player >= 4) player = 0;
 
-                    // reset variables
-                    max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
-                    height = Piece_Info[arr_list[player].array[list_idx]][1];
-                    width = Piece_Info[arr_list[player].array[list_idx]][2];
+                    Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
