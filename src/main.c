@@ -12,6 +12,33 @@ struct Player arr_list[4];  // holds structs for Players 1,2,3,4
 
 int currentBoard[20][20] = {0};  // placed pixels in 2d array
 
+void Init_Players(struct Player arr_list[4])
+{
+    // PLAYER 1
+    arr_list[0] =  Player_Init();    // 0xffb0eacd
+    arr_list[0].color = 0xff0000ff;  // blue
+    arr_list[0].isHuman = true;      // HUMAN
+    Player_Populate(&arr_list[0]);
+
+    // PLAYER 2
+    arr_list[1] =  Player_Init();
+    arr_list[1].color = 0xffffff00;  // yellow
+    arr_list[1].isHuman = true;      // HUMAN
+    Player_Populate(&arr_list[1]);
+
+    // PLAYER 3
+    arr_list[2] =  Player_Init();
+    arr_list[2].color = 0xffff0000;  // red
+    arr_list[2].isHuman = false;     // BOT
+    Player_Populate(&arr_list[2]);
+
+    // PLAYER 4
+    arr_list[3] =  Player_Init();
+    arr_list[3].color = 0xff00ff00;  // green
+    arr_list[3].isHuman = true;      // HUMAN
+    Player_Populate(&arr_list[3]);
+}
+
 void CurrentBoard_To_Vram(int array[20][20])
 {
     for(int i = 0; i<20; i++)
@@ -85,33 +112,6 @@ int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
     return 0;
 }
 
-void Init_Players(struct Player arr_list[4])
-{
-    // PLAYER 1
-    arr_list[0] =  Player_Init();    // 0xffb0eacd
-    arr_list[0].color = 0xff0000ff;  // blue
-    arr_list[0].isHuman = true;      // HUMAN
-    Player_Populate(&arr_list[0]);
-
-    // PLAYER 2
-    arr_list[1] =  Player_Init();
-    arr_list[1].color = 0xffffff00;  // yellow
-    arr_list[1].isHuman = true;      // HUMAN
-    Player_Populate(&arr_list[1]);
-
-    // PLAYER 3
-    arr_list[2] =  Player_Init();
-    arr_list[2].color = 0xffff0000;  // red
-    arr_list[2].isHuman = false;     // BOT
-    Player_Populate(&arr_list[2]);
-
-    // PLAYER 4
-    arr_list[3] =  Player_Init();
-    arr_list[3].color = 0xff00ff00;  // green
-    arr_list[3].isHuman = true;      // HUMAN
-    Player_Populate(&arr_list[3]);
-}
-
 void Print_Array(int array[5][5])
 {
     for(int r=0;r<5;r++)
@@ -155,8 +155,6 @@ void Copy_Piece_to_Preview_Slots(int array[5][5], int Piece_Preview[5][5])
             Piece_Preview[r][c] = 0;
 }
 
-
-
 void Swap_Rows(int grid[5][5], int row_a, int row_b)
 {
     int dummy_row[5] = {0,0,0,0,0};
@@ -199,7 +197,6 @@ void Flip_Preview_Piece(int grid[5][5])
     }
 }
 
-
 int main(void)
 {
     // ensure keys don't repeat
@@ -217,11 +214,11 @@ int main(void)
 
     // active piece variables
     int height, width, max_rot, dummy;
-    int active_x = 0;        // x of active piece 
-    int active_y = 0;        // y of active piece 
-    int rot = 0;             // init rotation
-    int player = 0;          // keeps track of player
-    int list_idx = 0;        // points to player's pieces
+    int active_x = 0;                     // x of active piece 
+    int active_y = 0;                     // y of active piece 
+    int rot = 0;                          // init rotation
+    int player = 0;                       // keeps track of player
+    int list_idx = 0;                     // points to player's pieces
     bool piece_is_ver_reflected = false;  // piece flipped
 
     int Piece_Preview[5][5] = {
@@ -239,8 +236,6 @@ int main(void)
     max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
     height = Piece_Info[arr_list[player].array[list_idx]][1];
     width = Piece_Info[arr_list[player].array[list_idx]][2];
-
-    // Piece_Preview <=> Pieces[arr_list[player].array[list_idx]][rot]
 
     io_setup();
     io_resize(20);
