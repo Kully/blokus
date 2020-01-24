@@ -19,12 +19,6 @@ uint32_t io_get(int x, int y);
 
 void io_put(int x, int y, uint32_t pixel);
 
-void io_line(int x0, int y0, int x1, int y1, uint32_t pixel);
-
-void io_circle(int x0, int y0, int radius, uint32_t pixel);
-
-void io_square(int x, int y, int w, int h, uint32_t pixel);
-
 void io_clear(void);
 
 int io_up_key(void);
