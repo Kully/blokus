@@ -112,14 +112,14 @@ void Init_Players(struct Player arr_list[4])
     Player_Populate(&arr_list[3]);
 }
 
-void Print_Array(int array[5][5])  // debugging
+void Print_Array(int array[5][5])
 {
     for(int r=0;r<5;r++)
     {
         printf("\n");
         for(int c=0;c<5;c++)
         {
-            if(array[4-r][c] == 1)
+            if(array[r][c] == 1)
             {
                 printf("[X]");
             }
@@ -142,15 +142,63 @@ void Draw_Piece(int x, int y, int color, int array[5][5])
         }
 }
 
-void Reflect_Piece(int array[5][5], int *ptr_Piece_Preview)
+void Copy_Piece_to_Preview_Slots(int array[5][5], int Piece_Preview[5][5])
 {
+    // array := the active piece
+    // Piece_Preview := a copy of active piece w/ flipped
+
     for(int r=0;r<5;r++)
-    for(int c=0;c>5;c++)
+    for(int c=0;c<5;c++)
         if(array[r][c] == 1)
-            ptr_Piece_Preview[r][c] = 1;
+            Piece_Preview[r][c] = 1;
         else
-            ptr_Piece_Preview[r][c] = 0;
+            Piece_Preview[r][c] = 0;
 }
+
+
+
+void Swap_Rows(int grid[5][5], int row_a, int row_b)
+{
+    int dummy_row[5] = {0,0,0,0,0};
+
+    // copy to dummy row
+    for(int i=0;i<5;i++)
+    {
+        dummy_row[i] = grid[row_a][i];
+        grid[row_a][i] = grid[row_b][i];
+        grid[row_b][i] = dummy_row[i];
+    }
+}
+
+int Row_Is_Zero(int row[5])
+{
+    for(int i=0;i<5;i++)
+    {
+        if(row[i] != 0)
+            return 0;
+    }
+    return 1;
+}
+
+void Flip_Preview_Piece(int grid[5][5])
+{
+    // reverse the rows
+    Swap_Rows(grid, 0, 4);
+    Swap_Rows(grid, 1, 3);
+
+    for(int row = 0; row < 5; row++)
+    {
+        if(Row_Is_Zero(grid[0]))
+        {
+            // move top row down
+            Swap_Rows(grid, 0, 1);
+            Swap_Rows(grid, 1, 2);
+            Swap_Rows(grid, 2, 3);
+            Swap_Rows(grid, 3, 4);          
+        }
+    }
+}
+
 
 int main(void)
 {
@@ -169,12 +217,12 @@ int main(void)
 
     // active piece variables
     int height, width, max_rot, dummy;
-    int active_x = 0;   // x of active piece 
-    int active_y = 0;   // y of active piece 
-    int rot = 0;        // init rotation
-    int player = 0;     // keeps track of player
-    int list_idx = 0;   // points to player's pieces
-    bool p_flipped = false;
+    int active_x = 0;        // x of active piece 
+    int active_y = 0;        // y of active piece 
+    int rot = 0;             // init rotation
+    int player = 0;          // keeps track of player
+    int list_idx = 0;        // points to player's pieces
+    bool piece_is_ver_reflected = false;  // piece flipped
 
     int Piece_Preview[5][5] = {
         {0,0,0,0,0},
@@ -183,7 +231,7 @@ int main(void)
         {0,0,0,0,0},
         {0,0,0,0,0},
     };
-    int *ptr_Piece_Preview[5][5] = &Piece_Preview[0][0];
+
 
     Init_Players(arr_list);
  
@@ -191,6 +239,8 @@ int main(void)
     max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
     height = Piece_Info[arr_list[player].array[list_idx]][1];
     width = Piece_Info[arr_list[player].array[list_idx]][2];
+
+    // Piece_Preview <=> Pieces[arr_list[player].array[list_idx]][rot]
 
     io_setup();
     io_resize(20);
@@ -264,23 +314,25 @@ int main(void)
             }
         } else C_KEY_COUNTER = 0;
 
-        // flip horizontally
+        // is flipped
         if(io_a_key())
         {
             A_KEY_COUNTER += 1;
             if(A_KEY_COUNTER == 1)
             {
-                p_flipped = !p_flipped;
-
-                Reflect_Piece(
-                    Pieces[arr_list[player].array[list_idx]][rot],  // array
-                    &ptr_Piece_Preview
-                );
-
-                // Print_Array(Pieces[arr_list[player].array[list_idx]][rot]);
-
+                piece_is_ver_reflected = !piece_is_ver_reflected;
             }
         } else A_KEY_COUNTER = 0;
+
+        // print array
+        if(io_p_key())
+        {
+            P_KEY_COUNTER += 1;
+            if(P_KEY_COUNTER == 1)
+            {
+                Print_Array(Pieces[arr_list[player].array[list_idx]][rot]);
+            }
+        } else P_KEY_COUNTER = 0;
 
         // swap piece (backwards)
         if(io_z_key())
@@ -330,16 +382,13 @@ int main(void)
             SPACE_KEY_COUNTER += 1;
             if(SPACE_KEY_COUNTER == 1)
             {
-                if(Can_Place_Piece(
-                    active_x, active_y, arr_list[player],
-                    Pieces[arr_list[player].array[list_idx]][rot]
-                ))
+                if(Can_Place_Piece(active_x, active_y, arr_list[player], Piece_Preview))
                 {
                     Write_Piece_To_CurrentBoard(
                         active_x,
                         active_y,
                         arr_list[player].color,
-                        Pieces[arr_list[player].array[list_idx]][rot]
+                        Piece_Preview
                     );
 
                     #if DEBUG == 1
@@ -378,12 +427,19 @@ int main(void)
         // draw current board
         CurrentBoard_To_Vram(currentBoard);
 
+        Copy_Piece_to_Preview_Slots(
+            Pieces[arr_list[player].array[list_idx]][rot],
+            Piece_Preview
+        );
+        if(piece_is_ver_reflected)
+            Flip_Preview_Piece(Piece_Preview);
+
         // draw active piece
         Draw_Piece(
             active_x,
             active_y,
             arr_list[player].color,
-            Pieces[arr_list[player].array[list_idx]][rot]
+            Piece_Preview
         );
 
         io_unlock();
