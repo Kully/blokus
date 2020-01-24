@@ -16,22 +16,18 @@ void Init_Players(struct Player arr_list[4])
 {
     arr_list[0] =  Player_Init();    // PLAYER 1
     arr_list[0].color = 0xff0000ff;  // blue
-    arr_list[0].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[0]);
 
     arr_list[1] =  Player_Init();    // PLAYER 2
     arr_list[1].color = 0xffffff00;  // yellow
-    arr_list[1].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[1]);
 
     arr_list[2] =  Player_Init();    // PLAYER 3
     arr_list[2].color = 0xffff0000;  // red
-    arr_list[2].isHuman = false;     // BOT
     Player_Populate(&arr_list[2]);
 
     arr_list[3] =  Player_Init();    // PLAYER 4
     arr_list[3].color = 0xff00ff00;  // green
-    arr_list[3].isHuman = true;      // HUMAN
     Player_Populate(&arr_list[3]);
 }
 
@@ -211,9 +207,7 @@ int main(void)
     int SPACE_KEY_COUNTER = 0;
 
     // active piece variables
-    int max_rot, height, width;
-    int* ptr_max_rot = &max_rot;
-    int dummy;
+    int max_rot, height, width, dummy;
     int active_x = 0;                     // x of active piece 
     int active_y = 0;                     // y of active piece 
     int rot = 0;                          // init rotation
@@ -228,7 +222,6 @@ int main(void)
         {0,0,0,0,0},
         {0,0,0,0,0},
     };
-
 
     Init_Players(arr_list);
     Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
@@ -400,10 +393,8 @@ int main(void)
         // draw current board
         CurrentBoard_To_Vram(currentBoard);
 
-        Copy_Piece_to_Preview_Slots(
-            Pieces[arr_list[player].array[list_idx]][rot],
-            Piece_Preview
-        );
+        Copy_Piece_to_Preview_Slots(Pieces[arr_list[player].array[list_idx]][rot],
+                                    Piece_Preview);
         if(piece_is_ver_reflected)
             Flip_Preview_Piece(Piece_Preview);
 

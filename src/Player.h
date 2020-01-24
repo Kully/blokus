@@ -8,7 +8,6 @@ struct Player
     int color;
     char* array;
     int count;
-    bool isHuman;
 };
 
 struct Player Player_Init()
@@ -17,7 +16,6 @@ struct Player Player_Init()
     list.color = 0xff0000ff;
     list.array = malloc(list.count);
     list.count = 21;
-    list.isHuman = true;  // human by default
     return list;
 }
 
