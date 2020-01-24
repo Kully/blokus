@@ -46,24 +46,23 @@ void Write_Piece_To_CurrentBoard(int x, int y, int color, int array[5][5])
             currentBoard[y+r][x+c] = color;
 }
 
-bool Piece_Covers_Corner_Square(int x, int y, struct Player list, int array[5][5])
+bool Piece_Covers_Corner_Square(int x, int y, int array[5][5])
 {
-    bool onePieceCoversCorner = false;
+    bool coversCornerSquare = false;
     for(int r=0;r<5;r++)
     for(int c=0;c<5;c++)
         if(array[c][r] == 1)
         {
             if(y+c == 0 && x+r == 0)
-                onePieceCoversCorner = true;
+                coversCornerSquare = true;
             if(y+c == 19 && x+r == 0)
-                onePieceCoversCorner = true;
+                coversCornerSquare = true;
             if(y+c == 0 && x+r == 19)
-                onePieceCoversCorner = true;
+                coversCornerSquare = true;
             if(y+c == 19 && x+r == 19)
-                onePieceCoversCorner = true;
+                coversCornerSquare = true;
         }
-
-    return onePieceCoversCorner;
+    return coversCornerSquare;
 }
 
 int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
@@ -97,8 +96,11 @@ int Can_Place_Piece(int x, int y, struct Player list, int array[5][5])
             if(currentBoard[y+c - 1][x+r - 1] == list.color)
                 touchingCornerSameColor = true;
         }
-    if(list.count == 21 && Piece_Covers_Corner_Square(x, y, list, array))
-        return 1;
+    if(list.count == 21)
+    {
+        if(Piece_Covers_Corner_Square(x, y, array))
+            return 1;
+    }
     else if(touchingCornerSameColor)
         return 1;
     return 0;
@@ -184,6 +186,12 @@ void Flip_Preview_Piece(int grid[5][5])
     }
 }
 
+void Advance_Player(int* player)
+{
+    *player += 1;
+    if(*player >= 4) *player = 0;
+}
+
 void Set_Piece_Stats(int player, int list_idx, int* max_rot, int* height, int* width)
 {
     *max_rot = Piece_Info[arr_list[player].array[list_idx]][0];
@@ -199,6 +207,7 @@ int main(void)
     int UP_KEY_COUNTER = 0;
     int DOWN_KEY_COUNTER = 0;
     int A_KEY_COUNTER = 0;
+    int S_KEY_COUNTER = 0;
     int P_KEY_COUNTER = 0;
     int Z_KEY_COUNTER = 0;
     int X_KEY_COUNTER = 0;
@@ -233,47 +242,55 @@ int main(void)
         io_lock();
         io_clear();
 
-        // move up
+        // END THE GAME IF NO MOVES
+        // if(arr_list[player].count == 0 || No_More_Moves(player))
+        //     Advance_Player(&player);
+
+        // MOVE PIECE UP
         if(io_up_key())
         {
             UP_KEY_COUNTER += 1;
             if(UP_KEY_COUNTER == 1)
-            {
                 active_y -= 1;
-            }
+
         } else UP_KEY_COUNTER = 0;
 
-        // move down
+        // MOVE PIECE DOWN
         if(io_down_key())
         {            
             DOWN_KEY_COUNTER += 1;
             if(DOWN_KEY_COUNTER == 1)
-            {
                 active_y += 1;
-            }
+
         } else DOWN_KEY_COUNTER = 0;
 
-        // move down
+        // MOVE PIECE LEFT
         if(io_left_key())
         {
             LEFT_KEY_COUNTER += 1;
             if(LEFT_KEY_COUNTER == 1)
-            {
                 active_x -= 1;
-            }
+
         } else LEFT_KEY_COUNTER = 0;
 
-        // move right
+        // MOVE PIECE RIGHT
         if(io_right_key())
         {
             RIGHT_KEY_COUNTER += 1;
             if(RIGHT_KEY_COUNTER == 1)
-            {
                 active_x += 1;
-            }
+
         } else RIGHT_KEY_COUNTER = 0;
 
-        // rotate piece
+        if(io_s_key())
+        {
+            S_KEY_COUNTER += 1;
+            if(S_KEY_COUNTER == 1)
+                exit(1);
+
+        } else S_KEY_COUNTER = 0;
+
+        // ROTATE PIECE
         if(io_c_key())
         {
             C_KEY_COUNTER += 1;
@@ -289,27 +306,25 @@ int main(void)
             }
         } else C_KEY_COUNTER = 0;
 
-        // is flipped
+        // FLIP PIECE HORIZONTALLY
         if(io_a_key())
         {
             A_KEY_COUNTER += 1;
             if(A_KEY_COUNTER == 1)
-            {
                 piece_is_ver_reflected = !piece_is_ver_reflected;
-            }
+
         } else A_KEY_COUNTER = 0;
 
-        // print array
+        // PRINT CURRENT PIECE
         if(io_p_key())
         {
             P_KEY_COUNTER += 1;
             if(P_KEY_COUNTER == 1)
-            {
                 Print_Array(Pieces[arr_list[player].array[list_idx]][rot]);
-            }
+
         } else P_KEY_COUNTER = 0;
 
-        // swap piece (backwards)
+        // SWAP PIECE (BACKWARDS)
         if(io_z_key())
         {
             Z_KEY_COUNTER += 1;
@@ -324,7 +339,7 @@ int main(void)
             }
         } else Z_KEY_COUNTER = 0;
 
-        // swap piece (forwards)
+        // SWAP PIECE (FORWARDS)
         if(io_x_key())
         {
             X_KEY_COUNTER += 1;
@@ -345,7 +360,7 @@ int main(void)
         if(active_y + height > 20) active_y -= 1;
         if(active_y < 0) active_y += 1;
 
-        // place piece down
+        // PLACE PIECE DOWN
         if(io_space_key())
         {
             SPACE_KEY_COUNTER += 1;
@@ -370,11 +385,10 @@ int main(void)
                         arr_list[player].array[list_idx]
                     );
                     
-                    // advance color
-                    player += 1;
-                    if(player >= 4) player = 0;
-
+                    Advance_Player(&player);
                     Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
+
+                    active_x = active_y = 9;  // set pieces to middle of board
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
