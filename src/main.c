@@ -418,8 +418,7 @@ int main(void)
         Draw_Piece(
             active_x,
             active_y,
-            // arr_list[player].color,
-            0xaa0000ff,
+            arr_list[player].color,
             Piece_Preview
         );
 
