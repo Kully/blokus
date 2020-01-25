@@ -166,7 +166,7 @@ int Row_Is_Zero(int row[5])
     return 1;
 }
 
-void Flip_Preview_Piece(int grid[5][5])
+void Reflect_Preview_Piece(int grid[5][5])
 {
     // reverse the rows
     Swap_Rows(grid, 0, 4);
@@ -234,7 +234,7 @@ int main(void)
     int rot = 0;                          // init rotation
     int player = 0;                       // keeps track of player
     int list_idx = 0;                     // points to player's pieces
-    bool piece_is_ver_reflected = false;  // piece flipped
+    bool piece_is_reflected = false;  // piece flipped
 
     int Piece_Preview[5][5] = {
         {0,0,0,0,0},
@@ -324,7 +324,7 @@ int main(void)
         {
             A_KEY_COUNTER += 1;
             if(A_KEY_COUNTER == 1)
-                piece_is_ver_reflected = !piece_is_ver_reflected;
+                piece_is_reflected = !piece_is_reflected;
 
         } else A_KEY_COUNTER = 0;
 
@@ -464,8 +464,8 @@ int main(void)
 
         Copy_Piece_to_Preview_Slots(Pieces[arr_list[player].array[list_idx]][rot],
                                     Piece_Preview);
-        if(piece_is_ver_reflected)
-            Flip_Preview_Piece(Piece_Preview);
+        if(piece_is_reflected)
+            Reflect_Preview_Piece(Piece_Preview);
 
         // draw active piece
         Draw_Piece(
