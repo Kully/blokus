@@ -120,6 +120,14 @@ int io_s_key(void)
     return 0;
 }
 
+int io_e_key(void)
+{
+    SDL_PumpEvents();
+    if(key[SDL_SCANCODE_E])
+        return 1;
+    return 0;
+}
+
 int io_p_key(void)
 {
     SDL_PumpEvents();

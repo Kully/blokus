@@ -208,6 +208,7 @@ int main(void)
     int DOWN_KEY_COUNTER = 0;
     int A_KEY_COUNTER = 0;
     int S_KEY_COUNTER = 0;
+    int E_KEY_COUNTER = 0;
     int P_KEY_COUNTER = 0;
     int Z_KEY_COUNTER = 0;
     int X_KEY_COUNTER = 0;
@@ -241,8 +242,6 @@ int main(void)
     {
         io_lock();
         io_clear();
-
-        // printf(sizeof())
 
         // SKIP PLAYER IF NO MOVES
         if(arr_list[player].count == 0)
@@ -395,7 +394,8 @@ int main(void)
                     active_x = 9;
                     active_y = 9;
                     
-                    rot = 0;  // init rotation of piece
+                    list_idx = 0;
+                    rot = 0;
                 }
             }
         } else SPACE_KEY_COUNTER = 0;

@@ -35,6 +35,8 @@ int io_a_key(void);
 
 int io_s_key(void);
 
+int io_e_key(void);
+
 int io_p_key(void);
 
 int io_z_key(void);

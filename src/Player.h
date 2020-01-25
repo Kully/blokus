@@ -8,6 +8,7 @@ struct Player
     int color;
     char* array;
     int count;
+    int score;
 };
 
 struct Player Player_Init()
@@ -16,6 +17,7 @@ struct Player Player_Init()
     list.color = 0xff0000ff;
     list.array = malloc(list.count);
     list.count = 21;
+    list.score = 0;
     return list;
 }
 
