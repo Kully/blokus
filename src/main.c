@@ -5,8 +5,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-#define DEBUG 1
-
 
 struct Player arr_list[4];       // holds structs for Players 1,2,3,4
 int currentBoard[20][20] = {0};  // placed pixels in 2d array
@@ -396,10 +394,8 @@ int main(void)
                         arr_list[player].array[list_idx]
                     );
 
-                    #if DEBUG == 1
-                        printf("Player %d Made a Move\n", player+1);
-                        Player_Print_Count(&arr_list[player]);
-                    #endif
+                    printf("Player %d Made a Move\n", player+1);
+                    Player_Print_Count(&arr_list[player]);
                     
                     list_idx = 0;
                     rot = 0;
