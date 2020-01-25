@@ -390,8 +390,12 @@ int main(void)
                     
                     Advance_Player(&player);
                     Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
-                    active_x = 9;  // set pieces to middle of board
+                    
+                    // set pieces to middle of board
+                    active_x = 9;
                     active_y = 9;
+                    
+                    rot = 0;  // init rotation of piece
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
@@ -421,6 +425,9 @@ int main(void)
             arr_list[player].color,
             Piece_Preview
         );
+
+        // printf("height %d\n", height);
+        // printf("width %d\n", width);
 
         io_unlock();
         io_delay(15);
