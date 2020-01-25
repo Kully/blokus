@@ -4,14 +4,14 @@
 
 ### To Build
 
-`make`
+`$ make`
 
 ### Controls
 
-`SPACE` := place piece on board <br>
-`C KEY` := rotate piece <br>
-`A KEY` := reflect piece <br>
-`P KEY` := print piece to terminal (debugging) <br>
-`Z KEY` := swap piece (backwards) <br>
-`X KEY` := swap piece (forwards) <br>
-`R KEY` := reset board <br>
+_SPACE_ := place piece on board <br>
+_C KEY_ := rotate piece <br>
+_A KEY_ := reflect piece <br>
+_P KEY_ := print piece to terminal (debugging) <br>
+_Z KEY_ := swap piece (backwards) <br>
+_X KEY_ := swap piece (forwards) <br>
+_R KEY_ := reset board <br>
