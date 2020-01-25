@@ -8,10 +8,10 @@
 
 ### Controls
 
-SPACE := place piece on board
-C KEY := rotate piece
-A KEY := reflect piece
-P KEY := print piece to terminal (debugging)
-Z KEY := swap piece (backwards)
-X KEY := swap piece (forwards)
-R KEY := reset board
+`SPACE` := place piece on board <br>
+`C KEY` := rotate piece <br>
+`A KEY` := reflect piece <br>
+`P KEY` := print piece to terminal (debugging) <br>
+`Z KEY` := swap piece (backwards) <br>
+`X KEY` := swap piece (forwards) <br>
+`R KEY` := reset board <br>
