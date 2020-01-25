@@ -9,7 +9,6 @@
 
 
 struct Player arr_list[4];       // holds structs for Players 1,2,3,4
-
 int currentBoard[20][20] = {0};  // placed pixels in 2d array
 
 void Init_Players(struct Player arr_list[4])
@@ -184,6 +183,18 @@ void Flip_Preview_Piece(int grid[5][5])
             Swap_Rows(grid, 3, 4);          
         }
     }
+}
+
+int Count_Unit_Squares_in_Piece(int array[5][5])
+{
+    int count = 0;
+    
+    for(int r=0; r<5; r++)
+    for(int c=0; c<5; c++)
+        if(array[r][c] == 1)
+            count++;
+    
+    return count;
 }
 
 void Advance_Player(int* player)
@@ -377,38 +388,81 @@ int main(void)
                         Piece_Preview
                     );
 
-                    #if DEBUG == 1
-                        printf("Player %d Made a Move\n", player+1);
-                        Player_Print_Count(&arr_list[player]);
-                    #endif
+                    // record last piece played
+                    arr_list[player].lastPiecePlayed = arr_list[player].array[list_idx];
 
                     Player_Remove_Int(
                         &arr_list[player],
                         arr_list[player].array[list_idx]
                     );
+
+                    #if DEBUG == 1
+                        printf("Player %d Made a Move\n", player+1);
+                        Player_Print_Count(&arr_list[player]);
+                    #endif
                     
+                    list_idx = 0;
+                    rot = 0;
+
                     Advance_Player(&player);
                     Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
                     
                     // set pieces to middle of board
                     active_x = 9;
                     active_y = 9;
-                    
-                    list_idx = 0;
-                    rot = 0;
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
 
-        // RESET GAME
-        if(io_r_key())
+        // END GAME AND ADD SCORES UP
+        if(io_e_key())
         {
-            for(int i=0; i<20; i++)
-            for(int j=0; j<20; j++)
-                currentBoard[i][j] = 0x0;
+            E_KEY_COUNTER += 1;
+            if(E_KEY_COUNTER == 1)
+            {
+                int winner = 0;
+                int maxVal = -100;
 
-            Init_Players(arr_list);
-        }
+                // calculate scores
+                for(int p=0; p<4; p++)
+                {
+                    // +15 if all pieces placed
+                    if(arr_list[p].count == 0)
+                        arr_list[p].score += 15;
+
+                    // +5 if last piece placed was smallest piece
+                    if(arr_list[p].lastPiecePlayed == 0)
+                        arr_list[p].score += 5;
+
+                    // subtract all unit squares of remaining pieces
+                    for(int i=0; i<arr_list[p].count; i++)
+                    {
+                        int count = Count_Unit_Squares_in_Piece(
+                            Pieces[arr_list[p].array[i]][0]
+                        );
+                        arr_list[p].score -= count;
+                    }
+
+                    if(arr_list[p].score > maxVal)
+                    {
+                        maxVal = arr_list[p].score;
+                        winner = p;
+                    }
+
+                }
+                printf("\nSCORES:\n");
+                printf("  PLAYER 1: %d \n", arr_list[0].score);
+                printf("  PLAYER 2: %d \n", arr_list[1].score);
+                printf("  PLAYER 3: %d \n", arr_list[2].score);
+                printf("  PLAYER 4: %d \n", arr_list[3].score);
+
+                printf("PLAYER %d WINS! \n", winner+1);
+                exit(1);
+            }
+
+                
+
+        } else E_KEY_COUNTER = 0;
 
         // draw current board
         CurrentBoard_To_Vram(currentBoard);
@@ -425,9 +479,6 @@ int main(void)
             arr_list[player].color,
             Piece_Preview
         );
-
-        // printf("height %d\n", height);
-        // printf("width %d\n", width);
 
         io_unlock();
         io_delay(15);

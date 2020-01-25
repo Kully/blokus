@@ -14,4 +14,4 @@ _A KEY_ := reflect piece <br>
 _P KEY_ := print piece to terminal (debugging) <br>
 _Z KEY_ := swap piece (backwards) <br>
 _X KEY_ := swap piece (forwards) <br>
-_R KEY_ := reset board <br>
+_E KEY_ := end game (calculate scores, etc) <br>

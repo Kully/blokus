@@ -9,6 +9,7 @@ struct Player
     char* array;
     int count;
     int score;
+    int lastPiecePlayed;
 };
 
 struct Player Player_Init()
@@ -18,6 +19,7 @@ struct Player Player_Init()
     list.array = malloc(list.count);
     list.count = 21;
     list.score = 0;
+    list.lastPiecePlayed = -1;  // init at -1
     return list;
 }
 
