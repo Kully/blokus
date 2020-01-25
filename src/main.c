@@ -5,9 +5,11 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+#define BOARD_SIZE 20
 
-struct Player arr_list[4];       // holds structs for Players 1,2,3,4
-int currentBoard[20][20] = {0};  // placed pixels in 2d array
+
+struct Player arr_list[4];                       // holds structs for Players 1,2,3,4
+int currentBoard[BOARD_SIZE][BOARD_SIZE] = {0};  // placed pixels in 2d array
 
 void Init_Players(struct Player arr_list[4])
 {
@@ -28,10 +30,10 @@ void Init_Players(struct Player arr_list[4])
     Player_Populate(&arr_list[3]);
 }
 
-void CurrentBoard_To_Vram(int array[20][20])
+void CurrentBoard_To_Vram(int array[BOARD_SIZE][BOARD_SIZE])
 {
-    for(int i = 0; i<20; i++)
-    for(int j = 0; j<20; j++)
+    for(int i = 0; i<BOARD_SIZE; i++)
+    for(int j = 0; j<BOARD_SIZE; j++)
         io_put(i, j, array[j][i]);
 }
 
@@ -52,11 +54,11 @@ bool Piece_Covers_Corner_Square(int x, int y, int array[5][5])
         {
             if(y+c == 0 && x+r == 0)
                 coversCornerSquare = true;
-            if(y+c == 19 && x+r == 0)
+            if(y+c == BOARD_SIZE-1 && x+r == 0)
                 coversCornerSquare = true;
-            if(y+c == 0 && x+r == 19)
+            if(y+c == 0 && x+r == BOARD_SIZE-1)
                 coversCornerSquare = true;
-            if(y+c == 19 && x+r == 19)
+            if(y+c == BOARD_SIZE-1 && x+r == BOARD_SIZE-1)
                 coversCornerSquare = true;
         }
     return coversCornerSquare;
@@ -366,9 +368,9 @@ int main(void)
         } else X_KEY_COUNTER = 0;
 
         // keep pieces on screen
-        if(active_x + width > 20) active_x -= 1;
+        if(active_x + width > BOARD_SIZE) active_x -= 1;
         if(active_x < 0) active_x += 1;
-        if(active_y + height > 20) active_y -= 1;
+        if(active_y + height > BOARD_SIZE) active_y -= 1;
         if(active_y < 0) active_y += 1;
 
         // PLACE PIECE DOWN
@@ -455,9 +457,6 @@ int main(void)
                 printf("PLAYER %d WINS! \n", winner+1);
                 exit(1);
             }
-
-                
-
         } else E_KEY_COUNTER = 0;
 
         // draw current board
