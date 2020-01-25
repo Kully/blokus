@@ -234,7 +234,7 @@ int main(void)
     int rot = 0;                          // init rotation
     int player = 0;                       // keeps track of player
     int list_idx = 0;                     // points to player's pieces
-    bool piece_is_reflected = false;  // piece flipped
+    bool piece_is_reflected = false;      // piece flipped
 
     int Piece_Preview[5][5] = {
         {0,0,0,0,0},
