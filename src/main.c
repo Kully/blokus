@@ -242,9 +242,11 @@ int main(void)
         io_lock();
         io_clear();
 
-        // END THE GAME IF NO MOVES
-        // if(arr_list[player].count == 0 || No_More_Moves(player))
-        //     Advance_Player(&player);
+        // printf(sizeof())
+
+        // SKIP PLAYER IF NO MOVES
+        if(arr_list[player].count == 0)
+            Advance_Player(&player);
 
         // MOVE PIECE UP
         if(io_up_key())
@@ -282,11 +284,12 @@ int main(void)
 
         } else RIGHT_KEY_COUNTER = 0;
 
+        // SKIP TURN
         if(io_s_key())
         {
             S_KEY_COUNTER += 1;
             if(S_KEY_COUNTER == 1)
-                exit(1);
+                Advance_Player(&player);
 
         } else S_KEY_COUNTER = 0;
 
@@ -333,7 +336,7 @@ int main(void)
                 list_idx -= 1;
                 if(list_idx < 0)
                     list_idx = arr_list[player].count - 1;
-                rot = 0;  // init rotation upon swapping piece
+                rot = 0;  // init rotation of piece
 
                 Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
             }
@@ -348,7 +351,7 @@ int main(void)
                 list_idx += 1;
                 if(list_idx >= arr_list[player].count)
                     list_idx = 0;
-                rot = 0;  // init rotation upon swapping piece
+                rot = 0;  // init rotation of piece
 
                 Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
             }
@@ -376,7 +379,7 @@ int main(void)
                     );
 
                     #if DEBUG == 1
-                        printf("Player %d Played\n", player+1);
+                        printf("Player %d Made a Move\n", player+1);
                         Player_Print_Count(&arr_list[player]);
                     #endif
 
@@ -387,8 +390,8 @@ int main(void)
                     
                     Advance_Player(&player);
                     Set_Piece_Stats(player, list_idx, &max_rot, &height, &width);
-
-                    active_x = active_y = 9;  // set pieces to middle of board
+                    active_x = 9;  // set pieces to middle of board
+                    active_y = 9;
                 }
             }
         } else SPACE_KEY_COUNTER = 0;
@@ -396,7 +399,6 @@ int main(void)
         // RESET GAME
         if(io_r_key())
         {
-            // clear the board
             for(int i=0; i<20; i++)
             for(int j=0; j<20; j++)
                 currentBoard[i][j] = 0x0;
@@ -416,7 +418,8 @@ int main(void)
         Draw_Piece(
             active_x,
             active_y,
-            arr_list[player].color,
+            // arr_list[player].color,
+            0xaa0000ff,
             Piece_Preview
         );
 
