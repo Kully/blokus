@@ -5,9 +5,9 @@
 
 struct Player
 {
-    int color;
-    char* array;
     int count;
+    char* array;
+    int color;
     int score;
     int lastPiecePlayed;
 };
@@ -15,9 +15,9 @@ struct Player
 struct Player Player_Init()
 {
     struct Player list;
-    list.color = 0xff0000ff;
-    list.array = malloc(list.count);
     list.count = 21;
+    list.array = malloc(sizeof(list) * list.count);
+    list.color = 0xff0000ff;
     list.score = 0;
     list.lastPiecePlayed = -1;  // init at -1
     return list;
