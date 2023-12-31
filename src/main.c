@@ -14,19 +14,19 @@ int currentBoard[BOARD_SIZE][BOARD_SIZE] = {0};  // placed pixels in 2d array
 void Init_Players(struct Player arr_list[4])
 {
     arr_list[0] =  Player_Init();    // PLAYER 1
-    arr_list[0].color = 0xff0000ff;  // blue
+    arr_list[0].color = 0xff5A8DBD;  // blue
     Player_Populate(&arr_list[0]);
 
     arr_list[1] =  Player_Init();    // PLAYER 2
-    arr_list[1].color = 0xffffff00;  // yellow
+    arr_list[1].color = 0xffEAC04C;  // yellow
     Player_Populate(&arr_list[1]);
 
     arr_list[2] =  Player_Init();    // PLAYER 3
-    arr_list[2].color = 0xffff0000;  // red
+    arr_list[2].color = 0xffEB6558;  // red
     Player_Populate(&arr_list[2]);
 
     arr_list[3] =  Player_Init();    // PLAYER 4
-    arr_list[3].color = 0xff00ff00;  // green
+    arr_list[3].color = 0xff6EEB77;  // green
     Player_Populate(&arr_list[3]);
 }
 
